@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/routes/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/crud/crud.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/crud/crud.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/feedback/feedback.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/feedback/feedback.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/profileCrud/profileCrud.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/profileCrud/profileCrud.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/rating/rating.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/rating/rating.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/test/test.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chats.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/test/test.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/trash/trash.controller.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/trash/trash.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chats.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/verify/verify.controllers.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/verify/verify.routes.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/routes/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.ts" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Elkhan2003&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Elkhan2003/CrudNest-backend.git&quot;,
+    &quot;accountId&quot;: &quot;d9458578-c42b-4cc1-98ed-264ed497aea0&quot;
+  }
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2bJMxOmMuArK5nINRZ4wsM1zkDR" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="openDirectoriesWithSingleClick" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/elcho911/Desktop/CrudNest-backend/src/modules/crud",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "pnpm",
+    "prettierjs.PrettierConfiguration.Package": "/Users/elcho911/Desktop/CrudNest-backend/node_modules/prettier",
+    "settings.editor.selected.configurable": "settings.javascript.prettier",
+    "ts.external.directory.path": "/Users/elcho911/Desktop/peakspace-backend/node_modules/typescript/lib",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/modules/crud" />
+      <recent name="$PROJECT_DIR$/src/modules/trash" />
+      <recent name="$PROJECT_DIR$/src/modules/profileCrud" />
+      <recent name="$PROJECT_DIR$/src/plugins" />
+      <recent name="$PROJECT_DIR$/src/modules/test" />
+    </key>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-1d06a55b98c1-2e7d6887c066-JavaScript-WS-241.15989.47" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="" />
+      <created>1705928975756</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1705928975756</updated>
+      <workItem from="1705928977816" duration="769000" />
+      <workItem from="1705929909505" duration="21000" />
+      <workItem from="1705929939598" duration="70000" />
+      <workItem from="1705930018939" duration="4080000" />
+      <workItem from="1705982844491" duration="19000" />
+      <workItem from="1705983303697" duration="1309000" />
+      <workItem from="1706001615261" duration="4422000" />
+      <workItem from="1706028780226" duration="9435000" />
+      <workItem from="1706086454110" duration="2437000" />
+      <workItem from="1706131149533" duration="37000" />
+      <workItem from="1706153932512" duration="3879000" />
+      <workItem from="1706198294195" duration="4435000" />
+      <workItem from="1706203163066" duration="2891000" />
+      <workItem from="1706206061736" duration="1131000" />
+      <workItem from="1706207198131" duration="9562000" />
+      <workItem from="1706254213780" duration="6088000" />
+      <workItem from="1706263859261" duration="18462000" />
+      <workItem from="1706295073132" duration="635000" />
+      <workItem from="1706298851805" duration="31000" />
+      <workItem from="1706298887807" duration="12219000" />
+      <workItem from="1706349326489" duration="3349000" />
+      <workItem from="1706352695870" duration="2884000" />
+      <workItem from="1706355676683" duration="12459000" />
+      <workItem from="1706443302424" duration="27857000" />
+      <workItem from="1706619775363" duration="3918000" />
+      <workItem from="1706641776898" duration="10581000" />
+      <workItem from="1706714445264" duration="3532000" />
+      <workItem from="1706763353725" duration="3382000" />
+      <workItem from="1706778704319" duration="20433000" />
+      <workItem from="1707291126863" duration="4799000" />
+      <workItem from="1707319915592" duration="2541000" />
+      <workItem from="1707741066138" duration="506000" />
+      <workItem from="1707806261840" duration="1551000" />
+      <workItem from="1707863275678" duration="2218000" />
+      <workItem from="1708503351056" duration="4679000" />
+      <workItem from="1708536149113" duration="5137000" />
+      <workItem from="1708542924480" duration="633000" />
+      <workItem from="1708595239862" duration="2949000" />
+      <workItem from="1708609199399" duration="2883000" />
+      <workItem from="1708623782944" duration="5049000" />
+      <workItem from="1708778550699" duration="1215000" />
+      <workItem from="1708793138802" duration="111000" />
+      <workItem from="1708802700415" duration="139000" />
+      <workItem from="1708807538400" duration="614000" />
+      <workItem from="1708973985036" duration="1302000" />
+      <workItem from="1709043014155" duration="205000" />
+      <workItem from="1709052545719" duration="12770000" />
+      <workItem from="1709072038941" duration="259000" />
+      <workItem from="1709100294645" duration="621000" />
+      <workItem from="1709287621255" duration="2047000" />
+      <workItem from="1716533449279" duration="9941000" />
+      <workItem from="1716586447939" duration="23000" />
+      <workItem from="1716586482878" duration="8612000" />
+      <workItem from="1716632978780" duration="1279000" />
+      <workItem from="1716796108808" duration="3768000" />
+      <workItem from="1716840834709" duration="1016000" />
+      <workItem from="1716878176769" duration="4603000" />
+      <workItem from="1717162995537" duration="546000" />
+      <workItem from="1717210917171" duration="119000" />
+      <workItem from="1717216293503" duration="138000" />
+      <workItem from="1717512736414" duration="23000" />
+      <workItem from="1717512766015" duration="180000" />
+      <workItem from="1717733202406" duration="1151000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
