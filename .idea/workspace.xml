@@ -5,24 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/crud/crud.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/crud/crud.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/feedback/feedback.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/feedback/feedback.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/profileCrud/profileCrud.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/profileCrud/profileCrud.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/rating/rating.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/rating/rating.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/test/test.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chats.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/test/test.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/trash/trash.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/trash/trash.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chats.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/verify/verify.controllers.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/verify/verify.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174232_user/migration.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174405_session_storage/migration.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174630_rating/migration.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174737_crud/migration.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/migrations/migration_lock.toml" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,12 +26,12 @@
     &quot;assignee&quot;: &quot;Elkhan2003&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Elkhan2003/CrudNest-backend.git&quot;,
-    &quot;accountId&quot;: &quot;d9458578-c42b-4cc1-98ed-264ed497aea0&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Elkhan2003/PeakSpace-backend.git",
+    "accountId": "d9458578-c42b-4cc1-98ed-264ed497aea0"
   }
-}</component>
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -60,24 +48,24 @@
     <option name="openDirectoriesWithSingleClick" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/elcho911/Desktop/CrudNest-backend/src/modules/crud",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "pnpm",
-    "prettierjs.PrettierConfiguration.Package": "/Users/elcho911/Desktop/CrudNest-backend/node_modules/prettier",
-    "settings.editor.selected.configurable": "settings.javascript.prettier",
-    "ts.external.directory.path": "/Users/elcho911/Desktop/peakspace-backend/node_modules/typescript/lib",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/elcho911/Desktop/CrudNest-backend/src/modules/crud&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;pnpm&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/Users/elcho911/Desktop/CrudNest-backend/node_modules/prettier&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;settings.javascript.prettier&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/Users/elcho911/Desktop/peakspace-backend/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src/modules/crud" />
@@ -165,6 +153,7 @@
       <workItem from="1717512736414" duration="23000" />
       <workItem from="1717512766015" duration="180000" />
       <workItem from="1717733202406" duration="1151000" />
+      <workItem from="1717734963015" duration="397000" />
     </task>
     <servers />
   </component>

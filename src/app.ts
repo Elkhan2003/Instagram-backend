@@ -1,7 +1,6 @@
 import { config } from 'dotenv';
 config();
 import express from 'express';
-// import cors from 'cors';
 import routes from './routes/index';
 import { User as PrismaUser } from './plugins/prisma';
 import { auth } from './plugins/auth';

@@ -7,7 +7,6 @@ exports.buildServer = void 0;
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 const express_1 = __importDefault(require("express"));
-// import cors from 'cors';
 const index_1 = __importDefault(require("./routes/index"));
 const auth_1 = require("./plugins/auth");
 const buildServer = () => {
