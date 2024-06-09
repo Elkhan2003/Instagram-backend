@@ -1,7 +1,6 @@
 process.env.TZ = 'UTC+6';
 import { WebSocketServer } from 'ws';
 import { buildServer } from './app';
-import WebSocketHandlers from './modules/chats/chats.controller';
 
 const server = buildServer();
 
@@ -27,12 +26,13 @@ const start = async () => {
 			console.log('New client connected');
 
 			ws.on('message', (message: string) => {
-				const parsedMessage = JSON.parse(message.toString());
-				const { action, resource, url } = parsedMessage;
-
-				switch (action) {
-					case 'getUser':
-						WebSocketHandlers.getUser(ws);
+				const parsedMessage = JSON.parse(message);
+				switch (parsedMessage.event) {
+					case 'message':
+						broadcastMessage(parsedMessage);
+						break;
+					case 'connection':
+						broadcastMessage(parsedMessage);
 						break;
 					default:
 						ws.send(
@@ -42,6 +42,12 @@ const start = async () => {
 						);
 				}
 			});
+
+			const broadcastMessage = (message: string) => {
+				wss.clients.forEach((client) => {
+					client.send(JSON.stringify(message));
+				});
+			};
 
 			ws.on('close', () => {
 				console.log('Client disconnected');

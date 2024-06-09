@@ -5,12 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/dist/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174232_user/migration.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174405_session_storage/migration.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174630_rating/migration.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240227174737_crud/migration.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/prisma/migrations/migration_lock.toml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/modules/chats/chats.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chats.controller.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/modules/chats/chats.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chats.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,12 +25,12 @@
     &quot;assignee&quot;: &quot;Elkhan2003&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings"><![CDATA[{
-  "selectedUrlAndAccountId": {
-    "url": "https://github.com/Elkhan2003/PeakSpace-backend.git",
-    "accountId": "d9458578-c42b-4cc1-98ed-264ed497aea0"
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Elkhan2003/PeakSpace-backend.git&quot;,
+    &quot;accountId&quot;: &quot;d9458578-c42b-4cc1-98ed-264ed497aea0&quot;
   }
-}]]></component>
+}</component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -54,7 +53,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/elcho911/Desktop/CrudNest-backend/src/modules/crud&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/elcho911/Desktop/peakspace-backend/src/modules/chats&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
@@ -68,11 +67,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/modules/chats" />
       <recent name="$PROJECT_DIR$/src/modules/crud" />
       <recent name="$PROJECT_DIR$/src/modules/trash" />
       <recent name="$PROJECT_DIR$/src/modules/profileCrud" />
       <recent name="$PROJECT_DIR$/src/plugins" />
-      <recent name="$PROJECT_DIR$/src/modules/test" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -153,7 +152,10 @@
       <workItem from="1717512736414" duration="23000" />
       <workItem from="1717512766015" duration="180000" />
       <workItem from="1717733202406" duration="1151000" />
-      <workItem from="1717734963015" duration="397000" />
+      <workItem from="1717734963015" duration="7682000" />
+      <workItem from="1717769687477" duration="1299000" />
+      <workItem from="1717844213733" duration="889000" />
+      <workItem from="1717952012010" duration="3549000" />
     </task>
     <servers />
   </component>
