@@ -19,16 +19,13 @@ const start = async () => {
         wss.on('connection', (ws) => {
             console.log('New client connected');
             ws.on('message', (message) => {
-                // const parsedMessage = JSON.parse(message);
-                const parsedMessage = Buffer.isBuffer(message)
-                    ? JSON.parse(Buffer.from(message).toString('utf8'))
-                    : JSON.parse(message);
+                const parsedMessage = JSON.parse(message);
                 switch (parsedMessage.event) {
                     case 'message':
-                        broadcastMessage(message);
+                        broadcastMessage(parsedMessage);
                         break;
                     case 'connection':
-                        broadcastMessage(message);
+                        broadcastMessage(parsedMessage);
                         break;
                     default:
                         ws.send(JSON.stringify({

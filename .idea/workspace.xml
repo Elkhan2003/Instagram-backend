@@ -7,9 +7,6 @@
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/modules/chats/chats.controller.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chats.controller.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/modules/chats/chats.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chats.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -155,7 +152,8 @@
       <workItem from="1717734963015" duration="7682000" />
       <workItem from="1717769687477" duration="1299000" />
       <workItem from="1717844213733" duration="889000" />
-      <workItem from="1717952012010" duration="3549000" />
+      <workItem from="1717952012010" duration="7208000" />
+      <workItem from="1718011497245" duration="171000" />
     </task>
     <servers />
   </component>

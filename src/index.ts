@@ -28,10 +28,10 @@ const start = async () => {
 			ws.on('message', (message: string) => {
 				const parsedMessage = JSON.parse(message);
 				switch (parsedMessage.event) {
-					case 'message':
+					case 'connection':
 						broadcastMessage(parsedMessage);
 						break;
-					case 'connection':
+					case 'message':
 						broadcastMessage(parsedMessage);
 						break;
 					default:
