@@ -2,12 +2,16 @@ import { config } from 'dotenv';
 config();
 import express from 'express';
 import routes from './routes/index';
-import { User as PrismaUser } from './plugins/prisma';
-import { auth } from './plugins/auth';
+
+interface usersType {
+	login: string;
+	password: string;
+	photo: string;
+}
 
 declare global {
 	namespace Express {
-		interface User extends PrismaUser {}
+		interface User extends usersType {}
 	}
 }
 
@@ -17,7 +21,6 @@ export const buildServer = () => {
 	// Middleware
 	server.use(express.urlencoded({ extended: true }));
 	server.use(express.json());
-	server.use(auth);
 
 	server.get('/', (req, res) => {
 		const user = req.user;

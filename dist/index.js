@@ -13,6 +13,7 @@ const start = async () => {
         }, () => {
             console.log(`${new Date()}`);
             console.log('server running at: http://localhost:' + PORT);
+            console.log('server running at: ws://localhost:' + PORT);
         });
         // Create WebSocket server
         const wss = new ws_1.WebSocketServer({ server: httpServer });
@@ -21,10 +22,10 @@ const start = async () => {
             ws.on('message', (message) => {
                 const parsedMessage = JSON.parse(message);
                 switch (parsedMessage.event) {
-                    case 'message':
+                    case 'connection':
                         broadcastMessage(parsedMessage);
                         break;
-                    case 'connection':
+                    case 'message':
                         broadcastMessage(parsedMessage);
                         break;
                     default:

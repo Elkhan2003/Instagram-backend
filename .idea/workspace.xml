@@ -6,7 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/modules/auth/auth.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/auth/auth.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/modules/auth/auth.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/auth/auth.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/auth/auth.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/auth/auth.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/plugins/auth.ts" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -154,6 +164,11 @@
       <workItem from="1717844213733" duration="889000" />
       <workItem from="1717952012010" duration="7208000" />
       <workItem from="1718011497245" duration="171000" />
+      <workItem from="1718045806187" duration="1943000" />
+      <workItem from="1718184944382" duration="760000" />
+      <workItem from="1718383740962" duration="1092000" />
+      <workItem from="1718387845554" duration="783000" />
+      <workItem from="1718412551171" duration="1676000" />
     </task>
     <servers />
   </component>

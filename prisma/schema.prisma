@@ -12,62 +12,15 @@ datasource db {
 }
 
 model User {
-  id              Int      @id @default(autoincrement())
-  firstName       String
-  lastName        String?
-  role            UserRole @default(USER)
-  auth            String
-  login           String   @unique
-  password        String?
-  isActive        Boolean  @default(true)
-  photo           String?
-  phone           String?
-  isPhoneVerified Boolean  @default(false)
-  traffic         String?
-  createdAt       String
-  updatedAt       String
-  Crud            Crud[]
-  Rating          Rating[]
-}
-
-model Session {
-  id        String   @id
-  sid       String   @unique
-  data      String   @db.Text
-  expiresAt DateTime
-}
-
-model Crud {
-  id        Int     @id @default(autoincrement())
-  userId    Int
-  url       String
-  resource  String
-  code      Json[]
-  isTrash   Boolean @default(false)
+  id        Int      @id @default(autoincrement())
+  userName  String
+  role      UserRole @default(USER)
+  login     String   @unique
+  password  String?
+  isActive  Boolean  @default(true)
+  photo     String?
   createdAt String
   updatedAt String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model Rating {
-  userId    Int
-  firstName String
-  lastName  String?
-  role      String?
-  photo     String
-  course    String?
-  group     String?
-  totalReq  Int
-  get       Int?
-  post      Int?
-  put       Int?
-  patch     Int?
-  delete    Int?
-  createdAt String
-  updatedAt String
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([userId])
 }
 
 enum UserRole {
