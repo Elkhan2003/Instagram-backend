@@ -23,10 +23,8 @@ export const buildServer = () => {
 	server.use(express.json());
 
 	server.get('/', (req, res) => {
-		const user = req.user;
 		res.status(200).send({
-			message: 'Hello World!',
-			user: user || 'The user is not authenticated'
+			message: 'Hello World!'
 		});
 	});
 

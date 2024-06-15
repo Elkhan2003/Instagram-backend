@@ -14,10 +14,8 @@ const buildServer = () => {
     server.use(express_1.default.urlencoded({ extended: true }));
     server.use(express_1.default.json());
     server.get('/', (req, res) => {
-        const user = req.user;
         res.status(200).send({
-            message: 'Hello World!',
-            user: user || 'The user is not authenticated'
+            message: 'Hello World!'
         });
     });
     server.use('/api/v1', index_1.default);

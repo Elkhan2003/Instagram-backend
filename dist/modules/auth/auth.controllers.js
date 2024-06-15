@@ -5,36 +5,49 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const prisma_1 = require("../../plugins/prisma");
+const moment_1 = __importDefault(require("moment"));
 const SECRET_KEY = 'Elcho911';
-let users = [];
 const registrationUser = async (req, res) => {
-    const { login, password, photo } = req.body;
+    const { login, password, userName, photo } = req.body;
     const hashedPassword = await bcryptjs_1.default.hash(password, 10);
-    const user = { login, password: hashedPassword, photo };
-    users.push(user);
+    await prisma_1.prisma.user.create({
+        data: {
+            login: login,
+            password: hashedPassword,
+            userName: userName,
+            photo: photo,
+            createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+            updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+        }
+    });
     res.status(201).send({ message: 'User registered successfully' });
 };
 const loginUser = async (req, res) => {
     const { login, password } = req.body;
-    const user = users.find((u) => u.login === login);
-    if (!user) {
+    const data = await prisma_1.prisma.user.findUnique({
+        where: { login: login }
+    });
+    if (!data) {
         return res.status(400).json({ message: 'Invalid login or password' });
     }
-    const isPasswordValid = await bcryptjs_1.default.compare(password, user.password);
+    const isPasswordValid = await bcryptjs_1.default.compare(password, data.password);
     if (!isPasswordValid) {
         return res.status(400).json({ message: 'Invalid login or password' });
     }
-    const token = jsonwebtoken_1.default.sign({ login: user.login }, SECRET_KEY, {
+    const token = jsonwebtoken_1.default.sign({ login: data.login }, SECRET_KEY, {
         expiresIn: '1h'
     });
     res.status(200).send({ token });
 };
 const getUser = async (req, res) => {
-    const user = users.find((u) => u.login === req.user?.login);
-    if (!user) {
-        return res.status(404).json({ message: 'User not found' });
+    const data = await prisma_1.prisma.user.findUnique({
+        where: { login: req.user?.login }
+    });
+    if (!data) {
+        return res.status(404).json({ message: 'The user is not authenticated.' });
     }
-    res.status(200).send({ profile: user });
+    res.status(200).send({ profile: data });
 };
 // Middleware для проверки токена
 const authenticateToken = (req, res, next) => {

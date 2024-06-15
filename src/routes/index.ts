@@ -20,7 +20,7 @@ router.get('/', cors(), (req, res) => {
 		status: true
 	});
 });
-router.use('/auth', cors(corsConfig), authRoutes);
-router.use('/chats', cors(corsConfig), chatsRoutes);
+router.use('/auth', cors(), authRoutes);
+router.use('/chats', cors(), chatsRoutes);
 
 export default router;
