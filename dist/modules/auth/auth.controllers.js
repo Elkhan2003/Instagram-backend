@@ -19,6 +19,7 @@ const generateTokens = (payload) => {
 };
 const registerUser = async (req, res) => {
     const { login, password, userName, photo } = req.body;
+    const { fingerprint } = req;
     if (!login || !password || !userName || !photo) {
         return res.status(400).send({
             message: 'Все поля обязательны для заполнения',
@@ -68,7 +69,7 @@ const registerUser = async (req, res) => {
             data: {
                 userId: id,
                 refreshToken,
-                fingerPrint: req.fingerprint?.hash
+                fingerPrint: fingerprint?.hash
             }
         });
         res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
@@ -85,6 +86,7 @@ const registerUser = async (req, res) => {
 };
 const loginUser = async (req, res) => {
     const { login, password } = req.body;
+    const { fingerprint } = req;
     if (!login || !password) {
         return res.status(400).send({
             message: 'Все поля обязательны для заполнения',
@@ -110,7 +112,7 @@ const loginUser = async (req, res) => {
             data: {
                 userId: user.id,
                 refreshToken,
-                fingerPrint: req.fingerprint?.hash
+                fingerPrint: fingerprint?.hash
             }
         });
         res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
@@ -118,6 +120,20 @@ const loginUser = async (req, res) => {
             accessToken,
             accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION
         });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};
+const logoutUser = async (req, res) => {
+    const refreshToken = req.cookies.refreshToken;
+    try {
+        await prisma_1.prisma.refreshSession.deleteMany({
+            where: { refreshToken }
+        });
+        res.clearCookie('refreshToken');
+        res.status(200).send({ message: 'Пользователь успешно вышел из системы' });
     }
     catch (error) {
         console.error(error);
@@ -148,12 +164,13 @@ const authenticateToken = (req, res, next) => {
         next();
     }
     catch (err) {
-        res.status(401).json({ message: 'Invalid access token' });
+        res.status(403).json({ message: 'Invalid access token' });
     }
 };
 exports.default = {
     loginUser,
     registerUser,
+    logoutUser,
     getUser,
     authenticateToken
 };

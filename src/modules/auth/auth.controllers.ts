@@ -17,6 +17,7 @@ const generateTokens = (payload: object) => {
 
 const registerUser = async (req: Request, res: Response) => {
 	const { login, password, userName, photo } = req.body;
+	const { fingerprint } = req;
 
 	if (!login || !password || !userName || !photo) {
 		return res.status(400).send({
@@ -76,7 +77,7 @@ const registerUser = async (req: Request, res: Response) => {
 			data: {
 				userId: id,
 				refreshToken,
-				fingerPrint: req.fingerprint?.hash!
+				fingerPrint: fingerprint?.hash!
 			}
 		});
 
@@ -95,6 +96,7 @@ const registerUser = async (req: Request, res: Response) => {
 
 const loginUser = async (req: Request, res: Response) => {
 	const { login, password } = req.body;
+	const { fingerprint } = req;
 
 	if (!login || !password) {
 		return res.status(400).send({
@@ -125,7 +127,7 @@ const loginUser = async (req: Request, res: Response) => {
 			data: {
 				userId: user.id,
 				refreshToken,
-				fingerPrint: req.fingerprint?.hash!
+				fingerPrint: fingerprint?.hash!
 			}
 		});
 
@@ -135,6 +137,22 @@ const loginUser = async (req: Request, res: Response) => {
 			accessToken,
 			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION
 		});
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({ message: 'Internal server error' });
+	}
+};
+
+const logoutUser = async (req: Request, res: Response) => {
+	const refreshToken = req.cookies.refreshToken;
+
+	try {
+		await prisma.refreshSession.deleteMany({
+			where: { refreshToken }
+		});
+
+		res.clearCookie('refreshToken');
+		res.status(200).send({ message: 'Пользователь успешно вышел из системы' });
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });
@@ -175,6 +193,7 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 export default {
 	loginUser,
 	registerUser,
+	logoutUser,
 	getUser,
 	authenticateToken
 };
