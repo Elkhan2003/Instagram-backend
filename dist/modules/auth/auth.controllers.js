@@ -3,72 +3,157 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const moment_1 = __importDefault(require("moment"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma_1 = require("../../plugins/prisma");
-const moment_1 = __importDefault(require("moment"));
-const SECRET_KEY = 'Elcho911';
-const registrationUser = async (req, res) => {
-    const { login, password, userName, photo } = req.body;
-    const hashedPassword = await bcryptjs_1.default.hash(password, 10);
-    await prisma_1.prisma.user.create({
-        data: {
-            login: login,
-            password: hashedPassword,
-            userName: userName,
-            photo: photo,
-            createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
-            updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
-        }
+const constants_1 = require("../../constants");
+const generateTokens = (payload) => {
+    const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
+        expiresIn: '1h'
     });
-    res.status(201).send({ message: 'User registered successfully' });
+    const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
+        expiresIn: '15d'
+    });
+    return { accessToken, refreshToken };
+};
+const registerUser = async (req, res) => {
+    const { login, password, userName, photo } = req.body;
+    if (!login || !password || !userName || !photo) {
+        return res.status(400).send({
+            message: 'Все поля обязательны для заполнения',
+            hint: {
+                login: 'string',
+                password: 'string',
+                userName: 'string',
+                photo: 'string'
+            }
+        });
+    }
+    if (login.length < 2 ||
+        password.length < 2 ||
+        userName.length < 2 ||
+        photo.length < 2) {
+        return res.status(400).send({
+            message: 'Все поля должны содержать минимум 2 символа',
+            hint: {
+                login: 'минимум 2 символа',
+                password: 'минимум 2 символа',
+                userName: 'минимум 2 символа',
+                photo: 'минимум 2 символа'
+            }
+        });
+    }
+    try {
+        const existingUser = await prisma_1.prisma.user.findUnique({ where: { login } });
+        if (existingUser) {
+            return res
+                .status(409)
+                .send({ message: 'Пользователь уже зарегистрирован' });
+        }
+        const hashedPassword = await bcryptjs_1.default.hash(password, 10);
+        const { id } = await prisma_1.prisma.user.create({
+            data: {
+                login,
+                password: hashedPassword,
+                userName,
+                photo,
+                createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+                updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+            }
+        });
+        const payload = { id, login, userName, photo };
+        const { accessToken, refreshToken } = generateTokens(payload);
+        await prisma_1.prisma.refreshSession.create({
+            data: {
+                userId: id,
+                refreshToken,
+                fingerPrint: req.fingerprint?.hash
+            }
+        });
+        res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
+        res.status(201).send({
+            message: 'Пользователь успешно зарегистрировался',
+            accessToken,
+            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
 };
 const loginUser = async (req, res) => {
     const { login, password } = req.body;
-    const data = await prisma_1.prisma.user.findUnique({
-        where: { login: login }
-    });
-    if (!data) {
-        return res.status(400).json({ message: 'Invalid login or password' });
+    if (!login || !password) {
+        return res.status(400).send({
+            message: 'Все поля обязательны для заполнения',
+            hint: {
+                login: 'string',
+                password: 'string'
+            }
+        });
     }
-    const isPasswordValid = await bcryptjs_1.default.compare(password, data.password);
-    if (!isPasswordValid) {
-        return res.status(400).json({ message: 'Invalid login or password' });
+    try {
+        const user = await prisma_1.prisma.user.findUnique({ where: { login } });
+        if (!user || !(await bcryptjs_1.default.compare(password, user.password))) {
+            return res.status(400).json({ message: 'Неверный логин или пароль' });
+        }
+        const payload = {
+            id: user.id,
+            login,
+            userName: user.userName,
+            photo: user.photo
+        };
+        const { accessToken, refreshToken } = generateTokens(payload);
+        await prisma_1.prisma.refreshSession.create({
+            data: {
+                userId: user.id,
+                refreshToken,
+                fingerPrint: req.fingerprint?.hash
+            }
+        });
+        res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
+        res.status(200).send({
+            accessToken,
+            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION
+        });
     }
-    const token = jsonwebtoken_1.default.sign({ login: data.login }, SECRET_KEY, {
-        expiresIn: '1h'
-    });
-    res.status(200).send({ token });
+    catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
 };
 const getUser = async (req, res) => {
     const data = await prisma_1.prisma.user.findUnique({
         where: { login: req.user?.login }
     });
     if (!data) {
-        return res.status(404).json({ message: 'The user is not authenticated.' });
+        return res
+            .status(404)
+            .json({ message: 'Пользователь не прошел проверку подлинности' });
     }
     res.status(200).send({ profile: data });
 };
-// Middleware для проверки токена
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
-        return res.status(401).json({ message: 'No token provided' });
+        return res.status(401).json({ message: 'Токен не предоставлен' });
     }
-    const token = authHeader.split(' ')[1];
+    const accessToken = authHeader.split(' ')[1];
     try {
-        const decoded = jsonwebtoken_1.default.verify(token, SECRET_KEY);
+        const decoded = jsonwebtoken_1.default.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
         // @ts-ignore
         req.user = decoded;
         next();
     }
     catch (err) {
-        res.status(401).json({ message: 'Invalid token' });
+        res.status(401).json({ message: 'Invalid access token' });
     }
 };
 exports.default = {
     loginUser,
-    registrationUser,
+    registerUser,
     getUser,
     authenticateToken
 };

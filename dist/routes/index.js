@@ -22,6 +22,6 @@ router.get('/', (0, cors_1.default)(), (req, res) => {
         status: true
     });
 });
-router.use('/auth', (0, cors_1.default)(), auth_routes_1.default);
+router.use('/auth', (0, cors_1.default)(corsConfig), auth_routes_1.default);
 router.use('/chats', (0, cors_1.default)(), chats_routes_1.default);
 exports.default = router;

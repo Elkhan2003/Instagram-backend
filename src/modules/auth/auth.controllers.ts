@@ -1,11 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
+import moment from 'moment';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../plugins/prisma';
-import moment from 'moment';
-const SECRET_KEY = 'Elcho911';
+import { ACCESS_TOKEN_EXPIRATION, COOKIE_SETTINGS } from '../../constants';
 
-const registrationUser = async (req: Request, res: Response) => {
+const generateTokens = (payload: object) => {
+	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
+		expiresIn: '1h'
+	});
+	const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
+		expiresIn: '15d'
+	});
+	return { accessToken, refreshToken };
+};
+
+const registerUser = async (req: Request, res: Response) => {
 	const { login, password, userName, photo } = req.body;
 
 	if (!login || !password || !userName || !photo) {
@@ -38,30 +48,45 @@ const registrationUser = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const existingUser = await prisma.user.findUnique({
-			where: { login: login }
-		});
+		const existingUser = await prisma.user.findUnique({ where: { login } });
 
 		if (existingUser) {
 			return res
-				.status(400)
+				.status(409)
 				.send({ message: 'Пользователь уже зарегистрирован' });
 		}
 
 		const hashedPassword = await bcrypt.hash(password, 10);
 
-		await prisma.user.create({
+		const { id } = await prisma.user.create({
 			data: {
-				login: login,
+				login,
 				password: hashedPassword,
-				userName: userName,
-				photo: photo,
+				userName,
+				photo,
 				createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
 
-		res.status(201).send({ message: 'Пользователь успешно зарегистрировался' });
+		const payload = { id, login, userName, photo };
+		const { accessToken, refreshToken } = generateTokens(payload);
+
+		await prisma.refreshSession.create({
+			data: {
+				userId: id,
+				refreshToken,
+				fingerPrint: req.fingerprint?.hash!
+			}
+		});
+
+		res.cookie('refreshToken', refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
+
+		res.status(201).send({
+			message: 'Пользователь успешно зарегистрировался',
+			accessToken,
+			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });
@@ -82,25 +107,34 @@ const loginUser = async (req: Request, res: Response) => {
 	}
 
 	try {
-		const user = await prisma.user.findUnique({
-			where: { login: login }
-		});
+		const user = await prisma.user.findUnique({ where: { login } });
 
-		if (!user) {
+		if (!user || !(await bcrypt.compare(password, user.password!))) {
 			return res.status(400).json({ message: 'Неверный логин или пароль' });
 		}
 
-		const isPasswordValid = await bcrypt.compare(password, user.password!);
-		if (!isPasswordValid) {
-			return res.status(400).json({ message: 'Неверный логин или пароль' });
-		}
+		const payload = {
+			id: user.id,
+			login,
+			userName: user.userName,
+			photo: user.photo
+		};
+		const { accessToken, refreshToken } = generateTokens(payload);
 
-		// Генерируем JWT токен
-		const token = jwt.sign({ login: user.login }, SECRET_KEY, {
-			expiresIn: '1h'
+		await prisma.refreshSession.create({
+			data: {
+				userId: user.id,
+				refreshToken,
+				fingerPrint: req.fingerprint?.hash!
+			}
 		});
 
-		res.status(200).send({ token });
+		res.cookie('refreshToken', refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
+
+		res.status(200).send({
+			accessToken,
+			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });
@@ -121,28 +155,26 @@ const getUser = async (req: Request, res: Response) => {
 	res.status(200).send({ profile: data });
 };
 
-// Middleware для проверки токена
 const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 	const authHeader = req.headers.authorization;
 	if (!authHeader) {
 		return res.status(401).json({ message: 'Токен не предоставлен' });
 	}
 
-	const token = authHeader.split(' ')[1];
+	const accessToken = authHeader.split(' ')[1];
 	try {
-		const decoded = jwt.verify(token, SECRET_KEY);
-
+		const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!);
 		// @ts-ignore
 		req.user = decoded;
 		next();
 	} catch (err) {
-		res.status(401).json({ message: 'Invalid token' });
+		res.status(403).json({ message: 'Invalid access token' });
 	}
 };
 
 export default {
 	loginUser,
-	registrationUser,
+	registerUser,
 	getUser,
 	authenticateToken
 };

@@ -6,14 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/modules/auth/auth.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/auth/auth.controllers.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/modules/auth/auth.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/auth/auth.routes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/app.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/auth/auth.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/auth/auth.routes.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -168,7 +160,7 @@
       <workItem from="1718184944382" duration="760000" />
       <workItem from="1718383740962" duration="1092000" />
       <workItem from="1718387845554" duration="783000" />
-      <workItem from="1718412551171" duration="4377000" />
+      <workItem from="1718412551171" duration="5493000" />
     </task>
     <servers />
   </component>

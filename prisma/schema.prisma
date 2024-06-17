@@ -12,15 +12,25 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  userName  String
-  role      UserRole @default(USER)
-  login     String   @unique
-  password  String?
-  isActive  Boolean  @default(true)
-  photo     String?
-  createdAt String
-  updatedAt String
+  id             Int              @id @default(autoincrement())
+  userName       String
+  role           UserRole         @default(USER)
+  login          String           @unique
+  password       String?
+  isActive       Boolean          @default(true)
+  photo          String?
+  createdAt      String
+  updatedAt      String
+  RefreshSession RefreshSession[]
+}
+
+model RefreshSession {
+  id           Int    @id @default(autoincrement())
+  userId       Int
+  refreshToken String
+  fingerPrint  String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum UserRole {
