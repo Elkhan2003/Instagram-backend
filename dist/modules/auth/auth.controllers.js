@@ -10,7 +10,7 @@ const prisma_1 = require("../../plugins/prisma");
 const constants_1 = require("../../constants");
 const generateTokens = (payload) => {
     const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h'
+        expiresIn: '1m'
     });
     const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: '15d'
@@ -140,6 +140,42 @@ const logoutUser = async (req, res) => {
         res.status(500).send({ message: 'Internal server error' });
     }
 };
+const refreshToken = async (req, res) => {
+    const { refreshToken: tokenFromCookie } = req.cookies;
+    if (!tokenFromCookie) {
+        return res.status(401).send({ message: 'Refresh token не предоставлен' });
+    }
+    try {
+        const payload = jsonwebtoken_1.default.verify(tokenFromCookie, process.env.REFRESH_TOKEN_SECRET);
+        const existingSession = await prisma_1.prisma.refreshSession.findFirst({
+            where: { refreshToken: tokenFromCookie }
+        });
+        if (!existingSession) {
+            return res
+                .status(401)
+                .send({ message: 'Недействительный refresh token' });
+        }
+        const newPayload = {
+            id: payload.id,
+            login: payload.login,
+            userName: payload.userName,
+            photo: payload.photo
+        };
+        const { accessToken, refreshToken: newRefreshToken } = generateTokens(newPayload);
+        await prisma_1.prisma.refreshSession.update({
+            where: { id: existingSession.id },
+            data: { refreshToken: newRefreshToken }
+        });
+        res.cookie('refreshToken', newRefreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
+        res
+            .status(200)
+            .send({ accessToken, accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};
 const getUser = async (req, res) => {
     const data = await prisma_1.prisma.user.findUnique({
         where: { login: req.user?.login }
@@ -171,6 +207,7 @@ exports.default = {
     loginUser,
     registerUser,
     logoutUser,
+    refreshToken,
     getUser,
     authenticateToken
 };
