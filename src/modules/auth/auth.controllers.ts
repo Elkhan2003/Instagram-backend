@@ -161,7 +161,9 @@ const logoutUser = async (req: Request, res: Response) => {
 
 const refreshToken = async (req: Request, res: Response) => {
 	const { refreshToken: tokenFromCookie } = req.cookies;
+	const { fingerprint } = req;
 
+	console.log(tokenFromCookie);
 	if (!tokenFromCookie) {
 		return res.status(401).send({ message: 'Refresh token не предоставлен' });
 	}
@@ -179,6 +181,10 @@ const refreshToken = async (req: Request, res: Response) => {
 			return res
 				.status(401)
 				.send({ message: 'Недействительный refresh token' });
+		}
+
+		if (existingSession.fingerPrint !== fingerprint?.hash) {
+			return res.status(401).send({ message: 'Недействительный fingerprint' });
 		}
 
 		const newPayload = {
@@ -201,6 +207,9 @@ const refreshToken = async (req: Request, res: Response) => {
 			.status(200)
 			.send({ accessToken, accessTokenExpiration: ACCESS_TOKEN_EXPIRATION });
 	} catch (error) {
+		// if (error instanceof jwt.TokenExpiredError) {
+		// 	return res.status(401).send({ message: 'Refresh token истек' });
+		// }
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });
 	}
