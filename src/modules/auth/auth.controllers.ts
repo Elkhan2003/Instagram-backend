@@ -77,7 +77,9 @@ const registerUser = async (req: Request, res: Response) => {
 			data: {
 				userId: id,
 				refreshToken,
-				fingerPrint: fingerprint?.hash!
+				fingerPrint: fingerprint?.hash!,
+				createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
 
@@ -115,6 +117,10 @@ const loginUser = async (req: Request, res: Response) => {
 			return res.status(400).json({ message: 'Неверный логин или пароль' });
 		}
 
+		const existingSession = await prisma.refreshSession.findFirst({
+			where: { userId: user.id, fingerPrint: fingerprint?.hash }
+		});
+
 		const payload = {
 			id: user.id,
 			login,
@@ -123,13 +129,25 @@ const loginUser = async (req: Request, res: Response) => {
 		};
 		const { accessToken, refreshToken } = generateTokens(payload);
 
-		await prisma.refreshSession.create({
-			data: {
-				userId: user.id,
-				refreshToken,
-				fingerPrint: fingerprint?.hash!
-			}
-		});
+		if (existingSession) {
+			await prisma.refreshSession.update({
+				where: { id: existingSession.id },
+				data: {
+					refreshToken,
+					updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+				}
+			});
+		} else {
+			await prisma.refreshSession.create({
+				data: {
+					userId: user.id,
+					refreshToken,
+					fingerPrint: fingerprint?.hash!,
+					createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+					updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+				}
+			});
+		}
 
 		res.cookie('refreshToken', refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
 
@@ -163,7 +181,6 @@ const refreshToken = async (req: Request, res: Response) => {
 	const { refreshToken: tokenFromCookie } = req.cookies;
 	const { fingerprint } = req;
 
-	console.log(tokenFromCookie);
 	if (!tokenFromCookie) {
 		return res.status(401).send({ message: 'Refresh token не предоставлен' });
 	}
@@ -198,7 +215,10 @@ const refreshToken = async (req: Request, res: Response) => {
 
 		await prisma.refreshSession.update({
 			where: { id: existingSession.id },
-			data: { refreshToken: newRefreshToken }
+			data: {
+				refreshToken: newRefreshToken,
+				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+			}
 		});
 
 		res.cookie('refreshToken', newRefreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
@@ -207,9 +227,6 @@ const refreshToken = async (req: Request, res: Response) => {
 			.status(200)
 			.send({ accessToken, accessTokenExpiration: ACCESS_TOKEN_EXPIRATION });
 	} catch (error) {
-		// if (error instanceof jwt.TokenExpiredError) {
-		// 	return res.status(401).send({ message: 'Refresh token истек' });
-		// }
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });
 	}

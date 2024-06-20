@@ -69,7 +69,9 @@ const registerUser = async (req, res) => {
             data: {
                 userId: id,
                 refreshToken,
-                fingerPrint: fingerprint?.hash
+                fingerPrint: fingerprint?.hash,
+                createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+                updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
             }
         });
         res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
@@ -101,6 +103,9 @@ const loginUser = async (req, res) => {
         if (!user || !(await bcryptjs_1.default.compare(password, user.password))) {
             return res.status(400).json({ message: 'Неверный логин или пароль' });
         }
+        const existingSession = await prisma_1.prisma.refreshSession.findFirst({
+            where: { userId: user.id, fingerPrint: fingerprint?.hash }
+        });
         const payload = {
             id: user.id,
             login,
@@ -108,13 +113,26 @@ const loginUser = async (req, res) => {
             photo: user.photo
         };
         const { accessToken, refreshToken } = generateTokens(payload);
-        await prisma_1.prisma.refreshSession.create({
-            data: {
-                userId: user.id,
-                refreshToken,
-                fingerPrint: fingerprint?.hash
-            }
-        });
+        if (existingSession) {
+            await prisma_1.prisma.refreshSession.update({
+                where: { id: existingSession.id },
+                data: {
+                    refreshToken,
+                    updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+                }
+            });
+        }
+        else {
+            await prisma_1.prisma.refreshSession.create({
+                data: {
+                    userId: user.id,
+                    refreshToken,
+                    fingerPrint: fingerprint?.hash,
+                    createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+                    updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+                }
+            });
+        }
         res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
         res.status(200).send({
             accessToken,
@@ -169,7 +187,10 @@ const refreshToken = async (req, res) => {
         const { accessToken, refreshToken: newRefreshToken } = generateTokens(newPayload);
         await prisma_1.prisma.refreshSession.update({
             where: { id: existingSession.id },
-            data: { refreshToken: newRefreshToken }
+            data: {
+                refreshToken: newRefreshToken,
+                updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+            }
         });
         res.cookie('refreshToken', newRefreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
         res

@@ -6,8 +6,9 @@
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/constants.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/modules/auth/auth.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/auth/auth.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/migrations/20240617182549_refresh_session/migration.sql" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/prisma/schema.prisma" beforeDir="false" afterPath="$PROJECT_DIR$/prisma/schema.prisma" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -171,7 +172,7 @@
       <workItem from="1718714320136" duration="272000" />
       <workItem from="1718716992894" duration="824000" />
       <workItem from="1718771061692" duration="10582000" />
-      <workItem from="1718826885553" duration="4596000" />
+      <workItem from="1718826885553" duration="9459000" />
     </task>
     <servers />
   </component>

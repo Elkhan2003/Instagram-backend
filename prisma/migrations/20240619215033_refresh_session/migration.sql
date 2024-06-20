@@ -4,6 +4,8 @@ CREATE TABLE "RefreshSession" (
     "userId" INTEGER NOT NULL,
     "refreshToken" TEXT NOT NULL,
     "fingerPrint" TEXT NOT NULL,
+    "createdAt" TEXT NOT NULL,
+    "updatedAt" TEXT NOT NULL,
 
     CONSTRAINT "RefreshSession_pkey" PRIMARY KEY ("id")
 );
