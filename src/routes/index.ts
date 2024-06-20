@@ -15,7 +15,8 @@ const corsConfig = {
 		'http://localhost:5179',
 		'http://localhost:5180',
 		'http://localhost:5000',
-		'https://elchocrud.pro'
+		'https://elchocrud.pro',
+		'https://peakspace.elcho.dev'
 	],
 	credentials: true
 };
