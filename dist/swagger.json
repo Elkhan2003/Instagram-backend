@@ -1,0 +1,24 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "ElchoFlowers API Documentation",
+        "description": "This API allows convenient interaction thanks to Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-peakspace.elcho.dev/api/v1",
+        "license": {
+            "name": "Copyright © 2021-2024. All rights are reserved",
+            "url": "https://elcho.dev"
+        }
+    },
+    "servers": [
+        {
+            "url": "https://api-peakspace.elcho.dev/api/v1",
+            "description": "Production server"
+        },
+        {
+            "url": "http://localhost:5000/api/v1",
+            "description": "Development server"
+        }
+    ],
+    "paths": {},
+    "components": {}
+}
