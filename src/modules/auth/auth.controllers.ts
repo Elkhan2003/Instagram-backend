@@ -3,12 +3,12 @@ import moment from 'moment';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../plugins/prisma';
-import { ACCESS_TOKEN_EXPIRATION, COOKIE_SETTINGS } from '../../constants';
 import { redis } from '../../plugins/redis';
+import { mailer } from '../../plugins/mailer';
+import { ACCESS_TOKEN_EXPIRATION, COOKIE_SETTINGS } from '../../constants';
 
 const getRedisData = async (req: Request, res: Response) => {
 	const result = await redis.getData('elcho');
-
 	res.status(200).send(JSON.stringify(result));
 };
 
@@ -22,7 +22,6 @@ const postRedisData = async (req: Request, res: Response) => {
 		}
 	};
 	const result = await redis.setData('elcho', exampleData, 3);
-
 	res.status(201).send(JSON.stringify(result));
 };
 
@@ -253,6 +252,68 @@ const refreshToken = async (req: Request, res: Response) => {
 	}
 };
 
+const forgotPassword = async (req: Request, res: Response) => {
+	const { email } = req.body;
+
+	const resetPasswordHtml = `
+    <div style="font-family: Arial, sans-serif; color: #333;">
+        <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
+            <tr>
+                <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+                    <h1 style="color: #9336fd;">Account Password Reset</h1>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="#ffffff" style="padding: 20px;">
+                    <p style="font-size: 18px; margin: 0;">Hello,</p>
+                    <p style="font-size: 16px; margin: 10px 0;">We received a request to reset your account password.</p>
+                    <p style="font-size: 16px; margin: 10px 0;">Click the button below to reset your password:</p>
+                    <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Reset Password</a>
+                    <p style="font-size: 16px; margin: 10px 0;">If you did not request a password reset, please ignore this email or contact support.</p>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+                    <p style="font-size: 14px; margin: 0;">Thank you,<br>The ElchoDev Team</p>
+                    <p style="font-size: 14px; margin: 0;">Need help? Contact us at <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+`;
+
+	const resetPasswordText = `
+Hello,
+
+We received a request to reset your account password.
+Click the link below to reset your password:
+https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN
+
+If you did not request a password reset, please ignore this email or contact support.
+
+Thank you,
+The ElchoDev Team
+
+Need help? Contact us at boss.armsport@gmail.com
+`;
+
+	const mailOptions = {
+		from: '"ElchoDev" <boss.armsport@gmail.com>',
+		to: email,
+		subject: 'Reset your password',
+		text: resetPasswordText,
+		html: resetPasswordHtml
+	};
+
+	try {
+		await mailer.sendMail(mailOptions);
+		res.status(200).send({ message: 'Password reset email sent successfully' });
+	} catch (error) {
+		console.error('Error sending email:', error);
+		res.status(500).send({ message: 'Internal server error' });
+	}
+};
+
 const getUser = async (req: Request, res: Response) => {
 	const data = await prisma.user.findUnique({
 		where: { login: req.user?.login }
@@ -291,6 +352,7 @@ export default {
 	registerUser,
 	logoutUser,
 	refreshToken,
+	forgotPassword,
 	getUser,
 	authenticateToken
 };

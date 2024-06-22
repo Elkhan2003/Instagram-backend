@@ -7,11 +7,12 @@ const moment_1 = __importDefault(require("moment"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma_1 = require("../../plugins/prisma");
-const constants_1 = require("../../constants");
 const redis_1 = require("../../plugins/redis");
+const mailer_1 = require("../../plugins/mailer");
+const constants_1 = require("../../constants");
 const getRedisData = async (req, res) => {
-    const result = redis_1.redisPlugin.getData('awd');
-    res.status(201).send(JSON.stringify(result));
+    const result = await redis_1.redis.getData('elcho');
+    res.status(200).send(JSON.stringify(result));
 };
 const postRedisData = async (req, res) => {
     const exampleData = {
@@ -22,7 +23,7 @@ const postRedisData = async (req, res) => {
             photo: 'string'
         }
     };
-    const result = redis_1.redisPlugin.setData('awd', exampleData);
+    const result = await redis_1.redis.setData('elcho', exampleData, 3);
     res.status(201).send(JSON.stringify(result));
 };
 const generateTokens = (payload) => {
@@ -218,6 +219,64 @@ const refreshToken = async (req, res) => {
         res.status(500).send({ message: 'Internal server error' });
     }
 };
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    const resetPasswordHtml = `
+    <div style="font-family: Arial, sans-serif; color: #333;">
+        <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
+            <tr>
+                <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+                    <h1 style="color: #9336fd;">Account Password Reset</h1>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="#ffffff" style="padding: 20px;">
+                    <p style="font-size: 18px; margin: 0;">Hello,</p>
+                    <p style="font-size: 16px; margin: 10px 0;">We received a request to reset your account password.</p>
+                    <p style="font-size: 16px; margin: 10px 0;">Click the button below to reset your password:</p>
+                    <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Reset Password</a>
+                    <p style="font-size: 16px; margin: 10px 0;">If you did not request a password reset, please ignore this email or contact support.</p>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+                    <p style="font-size: 14px; margin: 0;">Thank you,<br>The ElchoDev Team</p>
+                    <p style="font-size: 14px; margin: 0;">Need help? Contact us at <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+`;
+    const resetPasswordText = `
+Hello,
+
+We received a request to reset your account password.
+Click the link below to reset your password:
+https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN
+
+If you did not request a password reset, please ignore this email or contact support.
+
+Thank you,
+The ElchoDev Team
+
+Need help? Contact us at boss.armsport@gmail.com
+`;
+    const mailOptions = {
+        from: '"ElchoDev" <boss.armsport@gmail.com>',
+        to: email,
+        subject: 'Password Reset Request',
+        text: resetPasswordText,
+        html: resetPasswordHtml
+    };
+    try {
+        await mailer_1.mailer.sendMail(mailOptions);
+        res.status(200).send({ message: 'Password reset email sent successfully' });
+    }
+    catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).send({ message: 'Internal server error' });
+    }
+};
 const getUser = async (req, res) => {
     const data = await prisma_1.prisma.user.findUnique({
         where: { login: req.user?.login }
@@ -252,6 +311,7 @@ exports.default = {
     registerUser,
     logoutUser,
     refreshToken,
+    forgotPassword,
     getUser,
     authenticateToken
 };
