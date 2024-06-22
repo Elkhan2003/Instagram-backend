@@ -255,6 +255,25 @@ const refreshToken = async (req: Request, res: Response) => {
 const forgotPassword = async (req: Request, res: Response) => {
 	const { email } = req.body;
 
+	if (!email) {
+		return res.status(400).send({
+			message: 'Все поля обязательны для заполнения',
+			hint: {
+				email: 'string'
+			}
+		});
+	}
+
+	const emailRegex = /^\S+@\S+\.\S+$/i;
+	if (!emailRegex.test(email)) {
+		return res.status(400).send({
+			message: 'Неверный формат email',
+			hint: {
+				email: 'Введите корректный email адрес'
+			}
+		});
+	}
+
 	// 	const resetPasswordHtml = `
 	//     <div style="font-family: Arial, sans-serif; color: #333;">
 	//         <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
