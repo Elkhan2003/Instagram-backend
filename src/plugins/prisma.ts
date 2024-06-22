@@ -1,5 +1,14 @@
 import { PrismaClient, User } from '@prisma/client';
 
-export const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
-export type { User };
+const connectPrisma = async () => {
+	try {
+		await prisma.$connect();
+		console.log('Prisma Client Connected');
+	} catch (err) {
+		console.error('Failed to connect to Prisma', err);
+	}
+};
+connectPrisma();
+export { prisma, User };

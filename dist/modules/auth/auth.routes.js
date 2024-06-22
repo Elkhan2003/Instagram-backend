@@ -11,4 +11,6 @@ router.post('/sign-up', auth_controllers_1.default.registerUser);
 router.post('/logout', auth_controllers_1.default.logoutUser);
 router.post('/refresh', auth_controllers_1.default.refreshToken);
 router.get('/user', auth_controllers_1.default.authenticateToken, auth_controllers_1.default.getUser);
+router.get('/get', auth_controllers_1.default.getRedisData);
+router.get('/set', auth_controllers_1.default.postRedisData);
 exports.default = router;

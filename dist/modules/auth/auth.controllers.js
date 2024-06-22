@@ -8,6 +8,23 @@ const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma_1 = require("../../plugins/prisma");
 const constants_1 = require("../../constants");
+const redis_1 = require("../../plugins/redis");
+const getRedisData = async (req, res) => {
+    const result = redis_1.redisPlugin.getData('awd');
+    res.status(201).send(JSON.stringify(result));
+};
+const postRedisData = async (req, res) => {
+    const exampleData = {
+        hint: {
+            login: 'string',
+            password: 'string',
+            userName: 'string',
+            photo: 'string'
+        }
+    };
+    const result = redis_1.redisPlugin.setData('awd', exampleData);
+    res.status(201).send(JSON.stringify(result));
+};
 const generateTokens = (payload) => {
     const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '1m'
@@ -229,6 +246,8 @@ const authenticateToken = (req, res, next) => {
     }
 };
 exports.default = {
+    getRedisData,
+    postRedisData,
     loginUser,
     registerUser,
     logoutUser,
