@@ -15,15 +15,15 @@ const getRedisData = async (req, res) => {
     res.status(200).send(JSON.stringify(result));
 };
 const postRedisData = async (req, res) => {
-    // const exampleData = {
-    // 	hint: {
-    // 		email: 'string',
-    // 		password: 'string',
-    // 		userName: 'string',
-    // 		photo: 'string'
-    // 	}
-    // };
-    const result = await redis_1.redis.setData('elcho', 'RESET_PASSWORD_TOKEN_SECRET', 3);
+    const exampleData = {
+        hint: {
+            login: 'string',
+            password: 'string',
+            userName: 'string',
+            photo: 'string'
+        }
+    };
+    const result = await redis_1.redis.setData('elcho', exampleData, 3);
     res.status(201).send(JSON.stringify(result));
 };
 const generateTokens = (payload) => {
@@ -36,44 +36,35 @@ const generateTokens = (payload) => {
     return { accessToken, refreshToken };
 };
 const registerUser = async (req, res) => {
-    const { email, password, userName, photo } = req.body;
+    const { login, password, userName, photo } = req.body;
     const { fingerprint } = req;
-    if (!email || !password || !userName || !photo) {
+    if (!login || !password || !userName || !photo) {
         return res.status(400).send({
             message: 'Все поля обязательны для заполнения',
             hint: {
-                email: 'string',
+                login: 'string',
                 password: 'string',
                 userName: 'string',
                 photo: 'string'
             }
         });
     }
-    if (email.length < 2 ||
+    if (login.length < 2 ||
         password.length < 2 ||
         userName.length < 2 ||
         photo.length < 2) {
         return res.status(400).send({
             message: 'Все поля должны содержать минимум 2 символа',
             hint: {
-                email: 'минимум 2 символа',
+                login: 'минимум 2 символа',
                 password: 'минимум 2 символа',
                 userName: 'минимум 2 символа',
                 photo: 'минимум 2 символа'
             }
         });
     }
-    const emailRegex = /^\S+@\S+\.\S+$/i;
-    if (!emailRegex.test(email)) {
-        return res.status(400).send({
-            message: 'Неверный формат email',
-            hint: {
-                email: 'Введите корректный email адрес'
-            }
-        });
-    }
     try {
-        const existingUser = await prisma_1.prisma.user.findUnique({ where: { email } });
+        const existingUser = await prisma_1.prisma.user.findUnique({ where: { login } });
         if (existingUser) {
             return res
                 .status(409)
@@ -82,7 +73,7 @@ const registerUser = async (req, res) => {
         const hashedPassword = await bcryptjs_1.default.hash(password, 10);
         const { id } = await prisma_1.prisma.user.create({
             data: {
-                email,
+                login,
                 password: hashedPassword,
                 userName,
                 photo,
@@ -90,7 +81,7 @@ const registerUser = async (req, res) => {
                 updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
             }
         });
-        const payload = { id, email, userName, photo };
+        const payload = { id, login, userName, photo };
         const { accessToken, refreshToken } = generateTokens(payload);
         await prisma_1.prisma.refreshSession.create({
             data: {
@@ -114,28 +105,19 @@ const registerUser = async (req, res) => {
     }
 };
 const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { login, password } = req.body;
     const { fingerprint } = req;
-    if (!email || !password) {
+    if (!login || !password) {
         return res.status(400).send({
             message: 'Все поля обязательны для заполнения',
             hint: {
-                email: 'string',
+                login: 'string',
                 password: 'string'
             }
         });
     }
-    const emailRegex = /^\S+@\S+\.\S+$/i;
-    if (!emailRegex.test(email)) {
-        return res.status(400).send({
-            message: 'Неверный формат email',
-            hint: {
-                email: 'Введите корректный email адрес'
-            }
-        });
-    }
     try {
-        const user = await prisma_1.prisma.user.findUnique({ where: { email } });
+        const user = await prisma_1.prisma.user.findUnique({ where: { login } });
         if (!user || !(await bcryptjs_1.default.compare(password, user.password))) {
             return res.status(400).json({ message: 'Неверный логин или пароль' });
         }
@@ -144,7 +126,7 @@ const loginUser = async (req, res) => {
         });
         const payload = {
             id: user.id,
-            email,
+            login,
             userName: user.userName,
             photo: user.photo
         };
@@ -215,7 +197,7 @@ const refreshToken = async (req, res) => {
         }
         const newPayload = {
             id: payload.id,
-            email: payload.email,
+            login: payload.login,
             userName: payload.userName,
             photo: payload.photo
         };
@@ -256,47 +238,64 @@ const forgotPassword = async (req, res) => {
             }
         });
     }
-    try {
-        const user = await prisma_1.prisma.user.findUnique({ where: { email } });
-        if (!user) {
-            return res.status(404).send({ message: 'Пользователь не найден' });
-        }
-        const resetToken = jsonwebtoken_1.default.sign({ id: user.id }, process.env.RESET_PASSWORD_TOKEN_SECRET, {
-            expiresIn: '15m'
-        });
-        await redis_1.redis.setData(`resetToken:${user.id}`, resetToken, 15 * 60);
-        const resetPasswordHtml = `
-            <div style="font-family: Arial, sans-serif; color: #333;">
-                <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
-                    <tr>
-                        <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
-                            <h1 style="color: #9336fd;">Сброс пароля аккаунта</h1>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" bgcolor="#ffffff" style="padding: 20px;">
-                            <p style="font-size: 18px; margin: 0;">Здравствуйте,</p>
-                            <p style="font-size: 16px; margin: 10px 0;">Мы получили запрос на сброс пароля для вашего аккаунта.</p>
-                            <p style="font-size: 16px; margin: 10px 0;">Нажмите кнопку ниже, чтобы сбросить пароль:</p>
-                            <a href="https://yourwebsite.com/reset-password?token=${resetToken}" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
-                            <p style="font-size: 16px; margin: 10px 0;">Если вы не запрашивали сброс пароля, проигнорируйте это письмо или свяжитесь со службой поддержки.</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
-                            <p style="font-size: 14px; margin: 0;">Спасибо,<br>Команда ElchoDev</p>
-                            <p style="font-size: 14px; margin: 0;">Нужна помощь? Свяжитесь с нами по адресу <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        `;
-        const resetPasswordText = `
+    // 	const resetPasswordHtml = `
+    //     <div style="font-family: Arial, sans-serif; color: #333;">
+    //         <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
+    //             <tr>
+    //                 <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+    //                     <h1 style="color: #9336fd;">Account Password Reset</h1>
+    //                 </td>
+    //             </tr>
+    //             <tr>
+    //                 <td align="center" bgcolor="#ffffff" style="padding: 20px;">
+    //                     <p style="font-size: 18px; margin: 0;">Hello,</p>
+    //                     <p style="font-size: 16px; margin: 10px 0;">We received a request to reset your account password.</p>
+    //                     <p style="font-size: 16px; margin: 10px 0;">Click the button below to reset your password:</p>
+    //                     <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Reset Password</a>
+    //                     <p style="font-size: 16px; margin: 10px 0;">If you did not request a password reset, please ignore this email or contact support.</p>
+    //                 </td>
+    //             </tr>
+    //             <tr>
+    //                 <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+    //                     <p style="font-size: 14px; margin: 0;">Thank you,<br>The ElchoDev Team</p>
+    //                     <p style="font-size: 14px; margin: 0;">Need help? Contact us at <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
+    //                 </td>
+    //             </tr>
+    //         </table>
+    //     </div>
+    // `;
+    const resetPasswordHtml = `
+    <div style="font-family: Arial, sans-serif; color: #333;">
+        <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
+            <tr>
+                <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+                    <h1 style="color: #9336fd;">Сброс пароля аккаунта</h1>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="#ffffff" style="padding: 20px;">
+                    <p style="font-size: 18px; margin: 0;">Здравствуйте,</p>
+                    <p style="font-size: 16px; margin: 10px 0;">Мы получили запрос на сброс пароля для вашего аккаунта.</p>
+                    <p style="font-size: 16px; margin: 10px 0;">Нажмите кнопку ниже, чтобы сбросить пароль:</p>
+                    <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
+                    <p style="font-size: 16px; margin: 10px 0;">Если вы не запрашивали сброс пароля, проигнорируйте это письмо или свяжитесь со службой поддержки.</p>
+                </td>
+            </tr>
+            <tr>
+                <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+                    <p style="font-size: 14px; margin: 0;">Спасибо,<br>Команда ElchoDev</p>
+                    <p style="font-size: 14px; margin: 0;">Нужна помощь? Свяжитесь с нами по адресу <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
+                </td>
+            </tr>
+        </table>
+    </div>
+`;
+    const resetPasswordText = `
 Hello,
 
 We received a request to reset your account password.
 Click the link below to reset your password:
-https://yourwebsite.com/reset-password?token=${resetToken}
+https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN
 
 If you did not request a password reset, please ignore this email or contact support.
 
@@ -305,13 +304,14 @@ The ElchoDev Team
 
 Need help? Contact us at boss.armsport@gmail.com
 `;
-        const mailOptions = {
-            from: '"ElchoDev" <boss.armsport@gmail.com>',
-            to: email,
-            subject: 'Reset your password',
-            text: resetPasswordText,
-            html: resetPasswordHtml
-        };
+    const mailOptions = {
+        from: '"ElchoDev" <boss.armsport@gmail.com>',
+        to: email,
+        subject: 'Reset your password',
+        text: resetPasswordText,
+        html: resetPasswordHtml
+    };
+    try {
         await mailer_1.mailer.sendMail(mailOptions);
         res.status(200).send({ message: 'Password reset email sent successfully' });
     }
@@ -320,50 +320,9 @@ Need help? Contact us at boss.armsport@gmail.com
         res.status(500).send({ message: 'Internal server error' });
     }
 };
-const resetPassword = async (req, res) => {
-    const { newPassword } = req.body;
-    const paramsToken = req.params.token;
-    if (!newPassword) {
-        return res.status(400).send({
-            message: 'Все поля обязательны для заполнения',
-            hint: {
-                newPassword: 'string'
-            }
-        });
-    }
-    try {
-        const decoded = jsonwebtoken_1.default.verify(paramsToken, process.env.RESET_PASSWORD_TOKEN_SECRET);
-        const { id } = decoded;
-        const storedToken = await redis_1.redis.getData(`resetToken:${id}`);
-        if (!storedToken || storedToken !== paramsToken) {
-            return res
-                .status(400)
-                .send({ message: 'Неверный или просроченный токен сброса пароля' });
-        }
-        const hashedPassword = await bcryptjs_1.default.hash(newPassword, 10);
-        await prisma_1.prisma.user.update({
-            where: { id },
-            data: {
-                password: hashedPassword,
-                updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
-            }
-        });
-        await redis_1.redis.deleteData(`resetToken:${id}`);
-        res.status(200).send({ message: 'Пароль успешно сброшен' });
-    }
-    catch (error) {
-        console.error('Error resetting password:', error);
-        if (error instanceof jsonwebtoken_1.default.JsonWebTokenError) {
-            return res
-                .status(400)
-                .send({ message: 'Неверный или просроченный токен сброса пароля' });
-        }
-        res.status(500).send({ message: 'Internal server error' });
-    }
-};
 const getUser = async (req, res) => {
     const data = await prisma_1.prisma.user.findUnique({
-        where: { email: req.user?.email }
+        where: { login: req.user?.login }
     });
     if (!data) {
         return res
@@ -396,7 +355,6 @@ exports.default = {
     logoutUser,
     refreshToken,
     forgotPassword,
-    resetPassword,
     getUser,
     authenticateToken
 };

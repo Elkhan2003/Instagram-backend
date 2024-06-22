@@ -4,8 +4,9 @@ interface IRedisPlugin {
 	client: RedisClientType;
 	connect: () => Promise<void>;
 	getClient: () => RedisClientType;
-	setData: (key: string, value: object) => Promise<void>;
+	setData: (key: string, value: any, ttl?: number) => Promise<void>;
 	getData: (key: string) => Promise<any>;
+	deleteData: (key: string) => Promise<void>;
 }
 
 class RedisPlugin implements IRedisPlugin {
@@ -36,15 +37,22 @@ class RedisPlugin implements IRedisPlugin {
 		return this.client;
 	}
 
-	async setData(key: string, value: object, ttl?: number): Promise<void> {
+	async setData(key: string, value: any, ttl?: number): Promise<void> {
 		try {
-			const jsonString = JSON.stringify(value);
-			// console.log(`Setting data for key: ${key} with value: ${jsonString}`);
+			let dataToStore: string;
+
+			if (typeof value === 'object') {
+				dataToStore = JSON.stringify(value);
+			} else {
+				dataToStore = JSON.stringify(value);
+			}
+
+			// console.log(`Setting data for key: ${key} with value: ${dataToStore}`);
 			if (ttl) {
-				await this.client.set(key, jsonString, { EX: ttl });
+				await this.client.set(key, dataToStore, { EX: ttl });
 				// console.log(`Data set for key: ${key} with TTL: ${ttl} seconds`);
 			} else {
-				await this.client.set(key, jsonString);
+				await this.client.set(key, dataToStore);
 				// console.log(`Data set for key: ${key} with no TTL`);
 			}
 		} catch (err) {
@@ -59,6 +67,15 @@ class RedisPlugin implements IRedisPlugin {
 			return data ? JSON.parse(data) : null;
 		} catch (err) {
 			console.error('Failed to get data from Redis', err);
+		}
+	}
+
+	async deleteData(key: string): Promise<void> {
+		try {
+			await this.client.del(key);
+			// console.log(`Deleted data for key: ${key}`);
+		} catch (err) {
+			console.error('Failed to delete data from Redis', err);
 		}
 	}
 }

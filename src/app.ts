@@ -8,7 +8,7 @@ import swaggerUi from 'swagger-ui-express';
 import * as swaggerDocumentation from './swagger.json';
 
 interface usersType {
-	login: string;
+	email: string;
 	password: string;
 	photo: string;
 }
