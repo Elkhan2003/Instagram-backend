@@ -10,9 +10,5 @@ router.patch('/refresh', authControllers.refreshToken);
 router.post('/forgot', authControllers.forgotPassword);
 router.patch('/reset-password/:token', authControllers.resetPassword);
 router.get('/user', authControllers.authenticateToken, authControllers.getUser);
-router.get('/get', authControllers.getRedisData);
-router.post('/set', authControllers.postRedisData);
-router.post('/set', authControllers.postRedisData);
-// router.post('/send-sms', authControllers.sendSms);
 
 export default router;

@@ -7,24 +7,6 @@ import { redis } from '../../plugins/redis';
 import { mailer } from '../../plugins/mailer';
 import { ACCESS_TOKEN_EXPIRATION, COOKIE_SETTINGS } from '../../constants';
 
-const getRedisData = async (req: Request, res: Response) => {
-	const result = await redis.getData('elcho');
-	res.status(200).send(JSON.stringify(result));
-};
-
-const postRedisData = async (req: Request, res: Response) => {
-	const exampleData = {
-		hint: {
-			email: 'string',
-			password: 'string',
-			userName: 'string',
-			photo: 'string'
-		}
-	};
-	const result = await redis.setData('elcho', exampleData, 3);
-	res.status(201).send(JSON.stringify(result));
-};
-
 const generateTokens = (payload: object) => {
 	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
 		expiresIn: '1m'
@@ -457,8 +439,6 @@ const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
 };
 
 export default {
-	getRedisData,
-	postRedisData,
 	loginUser,
 	registerUser,
 	logoutUser,
