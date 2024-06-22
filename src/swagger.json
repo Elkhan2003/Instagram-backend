@@ -246,11 +246,7 @@
                   "frontEndUrl": {
                     "type": "string"
                   }
-                },
-                "required": [
-                  "email",
-                  "frontEndUrl"
-                ]
+                }
               }
             }
           }
