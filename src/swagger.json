@@ -242,10 +242,14 @@
                 "properties": {
                   "email": {
                     "type": "string"
+                  },
+                  "frontEndUrl": {
+                    "type": "string"
                   }
                 },
                 "required": [
-                  "email"
+                  "email",
+                  "frontEndUrl"
                 ]
               }
             }
@@ -279,22 +283,12 @@
         }
       }
     },
-    "/auth/reset-password/{token}": {
+    "/auth/reset-password": {
       "patch": {
         "summary": "Сброс пароля",
         "description": "Сброс пароля пользователя",
         "tags": [
           "Аутентификация"
-        ],
-        "parameters": [
-          {
-            "name": "token",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "requestBody": {
           "required": true,
@@ -303,11 +297,15 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "token": {
+                    "type": "string"
+                  },
                   "newPassword": {
                     "type": "string"
                   }
                 },
                 "required": [
+                  "token",
                   "newPassword"
                 ]
               }

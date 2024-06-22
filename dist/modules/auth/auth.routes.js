@@ -11,6 +11,6 @@ router.post('/sign-up', auth_controllers_1.default.registerUser);
 router.post('/logout', auth_controllers_1.default.logoutUser);
 router.patch('/refresh', auth_controllers_1.default.refreshToken);
 router.post('/forgot', auth_controllers_1.default.forgotPassword);
-router.patch('/reset-password/:token', auth_controllers_1.default.resetPassword);
+router.patch('/reset-password', auth_controllers_1.default.resetPassword);
 router.get('/user', auth_controllers_1.default.authenticateToken, auth_controllers_1.default.getUser);
 exports.default = router;

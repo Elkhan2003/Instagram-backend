@@ -255,7 +255,7 @@ const refreshToken = async (req: Request, res: Response) => {
 };
 
 const forgotPassword = async (req: Request, res: Response) => {
-	const { email } = req.body;
+	const { frontEndUrl, email } = req.body;
 
 	if (!email) {
 		return res.status(400).send({
@@ -272,6 +272,19 @@ const forgotPassword = async (req: Request, res: Response) => {
 			message: 'Неверный формат email',
 			hint: {
 				email: 'Введите корректный email адрес'
+			}
+		});
+	}
+
+	// Регулярное выражение для проверки допустимого домена
+	const domainRegex = /^https?:\/\/[^\/]+/;
+	const matchedDomain = frontEndUrl.match(domainRegex);
+
+	if (!matchedDomain) {
+		return res.status(400).send({
+			message: 'Недопустимый домен',
+			hint: {
+				frontEndUrl: 'Введите корректный URL с допустимым доменом'
 			}
 		});
 	}
@@ -306,7 +319,7 @@ const forgotPassword = async (req: Request, res: Response) => {
                             <p style="font-size: 18px; margin: 0;">Здравствуйте,</p>
                             <p style="font-size: 16px; margin: 10px 0;">Мы получили запрос на сброс пароля для вашего аккаунта.</p>
                             <p style="font-size: 16px; margin: 10px 0;">Нажмите кнопку ниже, чтобы сбросить пароль:</p>
-                            <a href="https://yourwebsite.com/reset-password?token=${resetToken}" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
+                            <a href="${matchedDomain[0]}/reset-password?token=${resetToken}" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
                             <p style="font-size: 16px; margin: 10px 0;">Если вы не запрашивали сброс пароля, проигнорируйте это письмо или свяжитесь со службой поддержки.</p>
                         </td>
                     </tr>
@@ -325,7 +338,7 @@ Hello,
 
 We received a request to reset your account password.
 Click the link below to reset your password:
-https://yourwebsite.com/reset-password?token=${resetToken}
+${matchedDomain[0]}/reset-password?token=${resetToken}
 
 If you did not request a password reset, please ignore this email or contact support.
 
@@ -351,14 +364,8 @@ Need help? Contact us at boss.armsport@gmail.com
 	}
 };
 
-const resetPassword = async (
-	req: Request<{
-		token: string;
-	}>,
-	res: Response
-) => {
-	const { newPassword } = req.body;
-	const paramsToken = req.params.token;
+const resetPassword = async (req: Request, res: Response) => {
+	const { token, newPassword } = req.body;
 
 	if (!newPassword) {
 		return res.status(400).send({
@@ -371,13 +378,13 @@ const resetPassword = async (
 
 	try {
 		const decoded = jwt.verify(
-			paramsToken,
+			token,
 			process.env.RESET_PASSWORD_TOKEN_SECRET!
 		) as jwt.JwtPayload;
 		const { id } = decoded;
 
 		const storedToken = await redis.getData(`resetToken:${id}`);
-		if (!storedToken || storedToken !== paramsToken) {
+		if (!storedToken || storedToken !== token) {
 			return res
 				.status(400)
 				.send({ message: 'Неверный или просроченный токен сброса пароля' });
