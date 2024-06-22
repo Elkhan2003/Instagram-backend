@@ -319,7 +319,7 @@ const forgotPassword = async (req: Request, res: Response) => {
                             <p style="font-size: 18px; margin: 0;">Здравствуйте,</p>
                             <p style="font-size: 16px; margin: 10px 0;">Мы получили запрос на сброс пароля для вашего аккаунта.</p>
                             <p style="font-size: 16px; margin: 10px 0;">Нажмите кнопку ниже, чтобы сбросить пароль:</p>
-                            <a href="${matchedDomain[0]}/reset-password?token=${resetToken}" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
+                            <a href="${matchedDomain[0]}/auth/reset-password?token=${resetToken}" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
                             <p style="font-size: 16px; margin: 10px 0;">Если вы не запрашивали сброс пароля, проигнорируйте это письмо или свяжитесь со службой поддержки.</p>
                         </td>
                     </tr>
@@ -338,7 +338,7 @@ Hello,
 
 We received a request to reset your account password.
 Click the link below to reset your password:
-${matchedDomain[0]}/reset-password?token=${resetToken}
+${matchedDomain[0]}/auth/reset-password?token=${resetToken}
 
 If you did not request a password reset, please ignore this email or contact support.
 
