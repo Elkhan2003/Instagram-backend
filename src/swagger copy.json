@@ -1,257 +1,282 @@
 {
-	"openapi": "3.0.0",
-	"info": {
-		"version": "1.0.0",
-		"title": "ElchoFlowers API Documentation",
-		"description": "This API allows convenient interaction thanks to Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-peakspace.elcho.dev/api/v1",
-		"license": {
-			"name": "Copyright © 2021-2024. All rights are reserved",
-			"url": "https://elcho.dev"
-		}
-	},
-	"servers": [
-		{
-			"url": "https://api-peakspace.elcho.dev/api/v1",
-			"description": "Production server"
-		},
-		{
-			"url": "http://localhost:5000/api/v1",
-			"description": "Development server"
-		}
-	],
-	"components": {
-		"securitySchemes": {
-			"BearerAuth": {
-				"type": "http",
-				"scheme": "bearer",
-				"bearerFormat": "JWT"
-			}
-		}
-	},
-	"security": [
-		{
-			"BearerAuth": []
-		}
-	],
-	"paths": {
-		"/auth/sign-in": {
-			"post": {
-				"summary": "Sign In",
-				"description": "User login",
-				"tags": ["Authentication"],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"login": {
-										"type": "string"
-									},
-									"password": {
-										"type": "string"
-									}
-								},
-								"required": ["login", "password"]
-							}
-						}
-					}
-				},
-				"responses": {
-					"200": {
-						"description": "Successful login",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"accessToken": {
-											"type": "string"
-										},
-										"accessTokenExpiration": {
-											"type": "string"
-										}
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid login or password"
-					},
-					"500": {
-						"description": "Internal server error"
-					}
-				}
-			}
-		},
-		"/auth/sign-up": {
-			"post": {
-				"summary": "Sign Up",
-				"description": "User registration",
-				"tags": ["Authentication"],
-				"requestBody": {
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"type": "object",
-								"properties": {
-									"login": {
-										"type": "string"
-									},
-									"password": {
-										"type": "string"
-									},
-									"userName": {
-										"type": "string"
-									},
-									"photo": {
-										"type": "string"
-									}
-								},
-								"required": ["login", "password", "userName", "photo"]
-							}
-						}
-					}
-				},
-				"responses": {
-					"201": {
-						"description": "Successful registration",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"message": {
-											"type": "string"
-										},
-										"accessToken": {
-											"type": "string"
-										},
-										"accessTokenExpiration": {
-											"type": "string"
-										}
-									}
-								}
-							}
-						}
-					},
-					"400": {
-						"description": "Invalid input data"
-					},
-					"409": {
-						"description": "User already exists"
-					},
-					"500": {
-						"description": "Internal server error"
-					}
-				}
-			}
-		},
-		"/auth/logout": {
-			"post": {
-				"summary": "Logout",
-				"description": "User logout",
-				"tags": ["Authentication"],
-				"responses": {
-					"200": {
-						"description": "Successful logout",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									}
-								}
-							}
-						}
-					},
-					"500": {
-						"description": "Internal server error"
-					}
-				}
-			}
-		},
-		"/auth/refresh": {
-			"post": {
-				"summary": "Refresh Token",
-				"description": "Refresh access token",
-				"tags": ["Authentication"],
-				"responses": {
-					"200": {
-						"description": "Successful token refresh",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"accessToken": {
-											"type": "string"
-										},
-										"accessTokenExpiration": {
-											"type": "string"
-										}
-									}
-								}
-							}
-						}
-					},
-					"401": {
-						"description": "Invalid refresh token or fingerprint"
-					},
-					"500": {
-						"description": "Internal server error"
-					}
-				}
-			}
-		},
-		"/auth/user": {
-			"get": {
-				"summary": "Get User",
-				"description": "Get authenticated user information",
-				"tags": ["Authentication"],
-				"responses": {
-					"200": {
-						"description": "Successful retrieval of user data",
-						"content": {
-							"application/json": {
-								"schema": {
-									"type": "object",
-									"properties": {
-										"profile": {
-											"type": "object",
-											"properties": {
-												"id": { "type": "string" },
-												"login": { "type": "string" },
-												"userName": { "type": "string" },
-												"photo": { "type": "string" },
-												"createdAt": { "type": "string" },
-												"updatedAt": { "type": "string" }
-											}
-										}
-									}
-								}
-							}
-						}
-					},
-					"404": {
-						"description": "User not authenticated"
-					},
-					"500": {
-						"description": "Internal server error"
-					}
-				},
-				"security": [
-					{
-						"BearerAuth": []
-					}
-				]
-			}
-		}
-	}
+  "openapi": "3.0.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Документация по API Peakspace",
+    "description": "Этот API позволяет удобно взаимодействовать благодаря Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-peakspace.elcho.dev/api/v1",
+    "license": {
+      "name": "Copyright © 2021-2024. Все права защищены",
+      "url": "https://elcho.dev"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api-peakspace.elcho.dev/api/v1",
+      "description": "Сервер для продакшена"
+    },
+    {
+      "url": "http://localhost:5000/api/v1",
+      "description": "Сервер для разработки"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/auth/sign-in": {
+      "post": {
+        "summary": "Вход",
+        "description": "Вход пользователя",
+        "tags": [
+          "Аутентификация"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "login",
+                  "password"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Успешный вход",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "accessTokenExpiration": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверный логин или пароль"
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера"
+          }
+        }
+      }
+    },
+    "/auth/sign-up": {
+      "post": {
+        "summary": "Регистрация",
+        "description": "Регистрация пользователя",
+        "tags": [
+          "Аутентификация"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "login": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "photo": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "login",
+                  "password",
+                  "userName",
+                  "photo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Успешная регистрация",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "accessTokenExpiration": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Неверные входные данные"
+          },
+          "409": {
+            "description": "Пользователь уже существует"
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "post": {
+        "summary": "Выход",
+        "description": "Выход пользователя",
+        "tags": [
+          "Аутентификация"
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешный выход",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера"
+          }
+        }
+      }
+    },
+    "/auth/refresh": {
+      "post": {
+        "summary": "Обновление токена",
+        "description": "Обновление токена доступа",
+        "tags": [
+          "Аутентификация"
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешное обновление токена",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accessToken": {
+                      "type": "string"
+                    },
+                    "accessTokenExpiration": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Неверный токен обновления или отпечаток"
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера"
+          }
+        }
+      }
+    },
+    "/auth/user": {
+      "get": {
+        "summary": "Получить пользователя",
+        "description": "Получение информации о пользователе",
+        "tags": [
+          "Аутентификация"
+        ],
+        "responses": {
+          "200": {
+            "description": "Успешное получение данных пользователя",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "profile": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "login": {
+                          "type": "string"
+                        },
+                        "userName": {
+                          "type": "string"
+                        },
+                        "photo": {
+                          "type": "string"
+                        },
+                        "createdAt": {
+                          "type": "string"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Пользователь не аутентифицирован"
+          },
+          "500": {
+            "description": "Внутренняя ошибка сервера"
+          }
+        }
+      }
+    }
+  }
 }

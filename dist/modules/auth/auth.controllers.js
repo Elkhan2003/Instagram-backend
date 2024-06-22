@@ -10,22 +10,6 @@ const prisma_1 = require("../../plugins/prisma");
 const redis_1 = require("../../plugins/redis");
 const mailer_1 = require("../../plugins/mailer");
 const constants_1 = require("../../constants");
-const getRedisData = async (req, res) => {
-    const result = await redis_1.redis.getData('elcho');
-    res.status(200).send(JSON.stringify(result));
-};
-const postRedisData = async (req, res) => {
-    // const exampleData = {
-    // 	hint: {
-    // 		email: 'string',
-    // 		password: 'string',
-    // 		userName: 'string',
-    // 		photo: 'string'
-    // 	}
-    // };
-    const result = await redis_1.redis.setData('elcho', 'RESET_PASSWORD_TOKEN_SECRET', 3);
-    res.status(201).send(JSON.stringify(result));
-};
 const generateTokens = (payload) => {
     const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '1m'
@@ -389,8 +373,6 @@ const authenticateToken = (req, res, next) => {
     }
 };
 exports.default = {
-    getRedisData,
-    postRedisData,
     loginUser,
     registerUser,
     logoutUser,

@@ -33,7 +33,7 @@ class RedisPlugin {
                 dataToStore = JSON.stringify(value);
             }
             else {
-                dataToStore = value;
+                dataToStore = JSON.stringify(value);
             }
             // console.log(`Setting data for key: ${key} with value: ${dataToStore}`);
             if (ttl) {
