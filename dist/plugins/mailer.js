@@ -7,8 +7,8 @@ exports.mailer = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const emailConfig = {
     service: 'gmail',
-    user: 'boss.armsport@gmail.com',
-    pass: 'qbiz ltgj fjox rupp'
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
 };
 class MailerPlugin {
     transporter;
@@ -23,7 +23,7 @@ class MailerPlugin {
     }
     async sendMail(options) {
         const mailOptions = {
-            from: emailConfig.user,
+            from: options.from,
             to: options.to,
             subject: options.subject,
             text: options.text,

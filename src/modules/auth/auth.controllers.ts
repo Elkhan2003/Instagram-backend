@@ -255,27 +255,54 @@ const refreshToken = async (req: Request, res: Response) => {
 const forgotPassword = async (req: Request, res: Response) => {
 	const { email } = req.body;
 
+	// 	const resetPasswordHtml = `
+	//     <div style="font-family: Arial, sans-serif; color: #333;">
+	//         <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
+	//             <tr>
+	//                 <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+	//                     <h1 style="color: #9336fd;">Account Password Reset</h1>
+	//                 </td>
+	//             </tr>
+	//             <tr>
+	//                 <td align="center" bgcolor="#ffffff" style="padding: 20px;">
+	//                     <p style="font-size: 18px; margin: 0;">Hello,</p>
+	//                     <p style="font-size: 16px; margin: 10px 0;">We received a request to reset your account password.</p>
+	//                     <p style="font-size: 16px; margin: 10px 0;">Click the button below to reset your password:</p>
+	//                     <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Reset Password</a>
+	//                     <p style="font-size: 16px; margin: 10px 0;">If you did not request a password reset, please ignore this email or contact support.</p>
+	//                 </td>
+	//             </tr>
+	//             <tr>
+	//                 <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
+	//                     <p style="font-size: 14px; margin: 0;">Thank you,<br>The ElchoDev Team</p>
+	//                     <p style="font-size: 14px; margin: 0;">Need help? Contact us at <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
+	//                 </td>
+	//             </tr>
+	//         </table>
+	//     </div>
+	// `;
+
 	const resetPasswordHtml = `
     <div style="font-family: Arial, sans-serif; color: #333;">
         <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
             <tr>
                 <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
-                    <h1 style="color: #9336fd;">Account Password Reset</h1>
+                    <h1 style="color: #9336fd;">Сброс пароля аккаунта</h1>
                 </td>
             </tr>
             <tr>
                 <td align="center" bgcolor="#ffffff" style="padding: 20px;">
-                    <p style="font-size: 18px; margin: 0;">Hello,</p>
-                    <p style="font-size: 16px; margin: 10px 0;">We received a request to reset your account password.</p>
-                    <p style="font-size: 16px; margin: 10px 0;">Click the button below to reset your password:</p>
-                    <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Reset Password</a>
-                    <p style="font-size: 16px; margin: 10px 0;">If you did not request a password reset, please ignore this email or contact support.</p>
+                    <p style="font-size: 18px; margin: 0;">Здравствуйте,</p>
+                    <p style="font-size: 16px; margin: 10px 0;">Мы получили запрос на сброс пароля для вашего аккаунта.</p>
+                    <p style="font-size: 16px; margin: 10px 0;">Нажмите кнопку ниже, чтобы сбросить пароль:</p>
+                    <a href="https://yourwebsite.com/reset-password?token=YOUR_RESET_TOKEN" style="background-color: #9336fd; color: #ffffff; padding: 15px 20px; text-decoration: none; font-size: 16px; border-radius: 5px; display: inline-block;">Сбросить пароль</a>
+                    <p style="font-size: 16px; margin: 10px 0;">Если вы не запрашивали сброс пароля, проигнорируйте это письмо или свяжитесь со службой поддержки.</p>
                 </td>
             </tr>
             <tr>
                 <td align="center" bgcolor="#f7f7f7" style="padding: 20px;">
-                    <p style="font-size: 14px; margin: 0;">Thank you,<br>The ElchoDev Team</p>
-                    <p style="font-size: 14px; margin: 0;">Need help? Contact us at <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
+                    <p style="font-size: 14px; margin: 0;">Спасибо,<br>Команда ElchoDev</p>
+                    <p style="font-size: 14px; margin: 0;">Нужна помощь? Свяжитесь с нами по адресу <a href="mailto:boss.armsport@gmail.com">boss.armsport@gmail.com</a></p>
                 </td>
             </tr>
         </table>
