@@ -47,6 +47,12 @@ const buildServer = () => {
         // @ts-ignore
         parameters: [express_fingerprint_1.default.useragent, express_fingerprint_1.default.acceptHeaders]
     }));
+    server.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', '*'); // замените "*" на ваш список разрешенных доменов, если необходимо
+        res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
+        res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+        next();
+    });
     server.get('/', (req, res) => {
         res.status(200).send({
             message: 'Hello World!'

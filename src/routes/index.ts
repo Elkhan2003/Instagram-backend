@@ -18,15 +18,8 @@ const corsConfig = {
 		'https://elchocrud.pro',
 		'https://peakspace.elcho.dev'
 	],
-	credentials: true,
-	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] // Добавьте методы сюда
+	credentials: true
 };
-
-// const corsConfig = {
-// 	origin: '*',
-// 	credentials: true,
-// 	methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] // Добавьте методы сюда
-// };
 
 const router = Router();
 

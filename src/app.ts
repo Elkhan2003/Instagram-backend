@@ -39,6 +39,12 @@ export const buildServer = () => {
 			parameters: [Fingerprint.useragent, Fingerprint.acceptHeaders]
 		})
 	);
+	server.use((req, res, next) => {
+		res.header('Access-Control-Allow-Origin', '*'); // замените "*" на ваш список разрешенных доменов, если необходимо
+		res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
+		res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+		next();
+	});
 
 	server.get('/', (req, res) => {
 		res.status(200).send({
