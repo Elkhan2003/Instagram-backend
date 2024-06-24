@@ -364,7 +364,17 @@ const getUser = async (req, res) => {
             .status(404)
             .json({ message: 'Пользователь не прошел проверку подлинности' });
     }
-    res.status(200).send({ profile: data });
+    const userData = {
+        id: data.id,
+        userName: data.userName,
+        role: data.role,
+        email: data.email,
+        isActive: data.isActive,
+        photo: data.photo,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt
+    };
+    res.status(200).send({ profile: userData });
 };
 const authenticateToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
