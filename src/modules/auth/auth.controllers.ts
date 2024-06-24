@@ -173,8 +173,7 @@ const loginUser = async (req: Request, res: Response) => {
 		res.status(200).send({
 			accessToken,
 			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-			refreshToken,
-			fingerprint: fingerprint?.components
+			refreshToken
 		});
 	} catch (error) {
 		console.error(error);
@@ -201,8 +200,6 @@ const refreshToken = async (req: Request, res: Response) => {
 	const { refreshToken: tokenFromBody } = req.body;
 	const { fingerprint } = req;
 
-	console.log(tokenFromBody);
-
 	if (!tokenFromBody) {
 		return res.status(401).send({ message: 'Refresh token не предоставлен' });
 	}
@@ -212,6 +209,7 @@ const refreshToken = async (req: Request, res: Response) => {
 			tokenFromBody,
 			process.env.REFRESH_TOKEN_SECRET!
 		) as jwt.JwtPayload;
+
 		const existingSession = await prisma.refreshSession.findFirst({
 			where: { refreshToken: tokenFromBody }
 		});
@@ -250,7 +248,7 @@ const refreshToken = async (req: Request, res: Response) => {
 		});
 	} catch (error) {
 		console.error(error);
-		res.status(500).send({ message: 'Internal server error' });
+		res.status(401).send({ message: 'JsonWebTokenError: invalid token' });
 	}
 };
 

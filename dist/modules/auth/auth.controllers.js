@@ -156,8 +156,7 @@ const loginUser = async (req, res) => {
         res.status(200).send({
             accessToken,
             accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
-            refreshToken,
-            fingerprint: fingerprint?.components
+            refreshToken
         });
     }
     catch (error) {
@@ -181,7 +180,6 @@ const logoutUser = async (req, res) => {
 const refreshToken = async (req, res) => {
     const { refreshToken: tokenFromBody } = req.body;
     const { fingerprint } = req;
-    console.log(tokenFromBody);
     if (!tokenFromBody) {
         return res.status(401).send({ message: 'Refresh token не предоставлен' });
     }
@@ -220,7 +218,7 @@ const refreshToken = async (req, res) => {
     }
     catch (error) {
         console.error(error);
-        res.status(500).send({ message: 'Internal server error' });
+        res.status(401).send({ message: 'JsonWebTokenError: invalid token' });
     }
 };
 const forgotPassword = async (req, res) => {
