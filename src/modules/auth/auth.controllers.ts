@@ -173,7 +173,8 @@ const loginUser = async (req: Request, res: Response) => {
 		res.status(200).send({
 			accessToken,
 			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-			refreshToken
+			refreshToken,
+			fingerprint: fingerprint?.components
 		});
 	} catch (error) {
 		console.error(error);
@@ -199,6 +200,8 @@ const logoutUser = async (req: Request, res: Response) => {
 const refreshToken = async (req: Request, res: Response) => {
 	const { refreshToken: tokenFromBody } = req.body;
 	const { fingerprint } = req;
+
+	console.log(tokenFromBody);
 
 	if (!tokenFromBody) {
 		return res.status(401).send({ message: 'Refresh token не предоставлен' });
@@ -243,7 +246,7 @@ const refreshToken = async (req: Request, res: Response) => {
 		res.status(200).send({
 			accessToken,
 			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
-			refreshToken
+			refreshToken: newRefreshToken
 		});
 	} catch (error) {
 		console.error(error);
