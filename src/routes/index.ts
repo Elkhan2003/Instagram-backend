@@ -3,24 +3,6 @@ import cors from 'cors';
 import authRoutes from '../modules/auth/auth.routes';
 import chatsRoutes from '../modules/chats/chats.routes';
 
-// const corsConfig = {
-// 	origin: [
-// 		'http://localhost:3000',
-// 		'http://localhost:5173',
-// 		'http://localhost:5174',
-// 		'http://localhost:5175',
-// 		'http://localhost:5176',
-// 		'http://localhost:5177',
-// 		'http://localhost:5178',
-// 		'http://localhost:5179',
-// 		'http://localhost:5180',
-// 		'http://localhost:5000',
-// 		'https://elchocrud.pro',
-// 		'https://peakspace.elcho.dev'
-// 	],
-// 	credentials: true
-// };
-
 const router = Router();
 
 router.get('/', cors(), (req, res) => {

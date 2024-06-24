@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../../plugins/prisma';
 import { redis } from '../../plugins/redis';
 import { mailer } from '../../plugins/mailer';
-import { ACCESS_TOKEN_EXPIRATION, COOKIE_SETTINGS } from '../../constants';
+import { ACCESS_TOKEN_EXPIRATION } from '../../constants';
 
 const generateTokens = (payload: object) => {
 	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
@@ -95,12 +95,11 @@ const registerUser = async (req: Request, res: Response) => {
 			}
 		});
 
-		res.cookie('refreshToken', refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
-
 		res.status(201).send({
 			message: 'Пользователь успешно зарегистрировался',
 			accessToken,
-			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION
+			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+			refreshToken
 		});
 	} catch (error) {
 		console.error(error);
@@ -171,11 +170,10 @@ const loginUser = async (req: Request, res: Response) => {
 			});
 		}
 
-		res.cookie('refreshToken', refreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
-
 		res.status(200).send({
 			accessToken,
-			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION
+			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+			refreshToken
 		});
 	} catch (error) {
 		console.error(error);
@@ -191,7 +189,6 @@ const logoutUser = async (req: Request, res: Response) => {
 			where: { refreshToken }
 		});
 
-		res.clearCookie('refreshToken');
 		res.status(200).send({ message: 'Пользователь успешно вышел из системы' });
 	} catch (error) {
 		console.error(error);
@@ -200,20 +197,20 @@ const logoutUser = async (req: Request, res: Response) => {
 };
 
 const refreshToken = async (req: Request, res: Response) => {
-	const { refreshToken: tokenFromCookie } = req.cookies;
+	const { refreshToken: tokenFromBody } = req.body;
 	const { fingerprint } = req;
 
-	if (!tokenFromCookie) {
+	if (!tokenFromBody) {
 		return res.status(401).send({ message: 'Refresh token не предоставлен' });
 	}
 
 	try {
 		const payload = jwt.verify(
-			tokenFromCookie,
+			tokenFromBody,
 			process.env.REFRESH_TOKEN_SECRET!
 		) as jwt.JwtPayload;
 		const existingSession = await prisma.refreshSession.findFirst({
-			where: { refreshToken: tokenFromCookie }
+			where: { refreshToken: tokenFromBody }
 		});
 
 		if (!existingSession) {
@@ -243,11 +240,11 @@ const refreshToken = async (req: Request, res: Response) => {
 			}
 		});
 
-		res.cookie('refreshToken', newRefreshToken, COOKIE_SETTINGS.REFRESH_TOKEN);
-
-		res
-			.status(200)
-			.send({ accessToken, accessTokenExpiration: ACCESS_TOKEN_EXPIRATION });
+		res.status(200).send({
+			accessToken,
+			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+			refreshToken
+		});
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });

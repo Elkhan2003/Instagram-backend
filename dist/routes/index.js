@@ -7,23 +7,6 @@ const express_1 = require("express");
 const cors_1 = __importDefault(require("cors"));
 const auth_routes_1 = __importDefault(require("../modules/auth/auth.routes"));
 const chats_routes_1 = __importDefault(require("../modules/chats/chats.routes"));
-// const corsConfig = {
-// 	origin: [
-// 		'http://localhost:3000',
-// 		'http://localhost:5173',
-// 		'http://localhost:5174',
-// 		'http://localhost:5175',
-// 		'http://localhost:5176',
-// 		'http://localhost:5177',
-// 		'http://localhost:5178',
-// 		'http://localhost:5179',
-// 		'http://localhost:5180',
-// 		'http://localhost:5000',
-// 		'https://elchocrud.pro',
-// 		'https://peakspace.elcho.dev'
-// 	],
-// 	credentials: true
-// };
 const router = (0, express_1.Router)();
 router.get('/', (0, cors_1.default)(), (req, res) => {
     res.status(200).send({

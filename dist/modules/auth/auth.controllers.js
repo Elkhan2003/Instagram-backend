@@ -85,11 +85,11 @@ const registerUser = async (req, res) => {
                 updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
             }
         });
-        res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
         res.status(201).send({
             message: 'Пользователь успешно зарегистрировался',
             accessToken,
-            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION
+            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
+            refreshToken
         });
     }
     catch (error) {
@@ -153,10 +153,10 @@ const loginUser = async (req, res) => {
                 }
             });
         }
-        res.cookie('refreshToken', refreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
         res.status(200).send({
             accessToken,
-            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION
+            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
+            refreshToken
         });
     }
     catch (error) {
@@ -170,7 +170,6 @@ const logoutUser = async (req, res) => {
         await prisma_1.prisma.refreshSession.deleteMany({
             where: { refreshToken }
         });
-        res.clearCookie('refreshToken');
         res.status(200).send({ message: 'Пользователь успешно вышел из системы' });
     }
     catch (error) {
@@ -179,15 +178,15 @@ const logoutUser = async (req, res) => {
     }
 };
 const refreshToken = async (req, res) => {
-    const { refreshToken: tokenFromCookie } = req.cookies;
+    const { refreshToken: tokenFromBody } = req.body;
     const { fingerprint } = req;
-    if (!tokenFromCookie) {
+    if (!tokenFromBody) {
         return res.status(401).send({ message: 'Refresh token не предоставлен' });
     }
     try {
-        const payload = jsonwebtoken_1.default.verify(tokenFromCookie, process.env.REFRESH_TOKEN_SECRET);
+        const payload = jsonwebtoken_1.default.verify(tokenFromBody, process.env.REFRESH_TOKEN_SECRET);
         const existingSession = await prisma_1.prisma.refreshSession.findFirst({
-            where: { refreshToken: tokenFromCookie }
+            where: { refreshToken: tokenFromBody }
         });
         if (!existingSession) {
             return res
@@ -211,10 +210,11 @@ const refreshToken = async (req, res) => {
                 updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
             }
         });
-        res.cookie('refreshToken', newRefreshToken, constants_1.COOKIE_SETTINGS.REFRESH_TOKEN);
-        res
-            .status(200)
-            .send({ accessToken, accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION });
+        res.status(200).send({
+            accessToken,
+            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
+            refreshToken
+        });
     }
     catch (error) {
         console.error(error);

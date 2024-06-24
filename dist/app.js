@@ -32,7 +32,6 @@ const dotenv_1 = require("dotenv");
 const express_1 = __importDefault(require("express"));
 const index_1 = __importDefault(require("./routes/index"));
 const express_fingerprint_1 = __importDefault(require("express-fingerprint"));
-const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
 const swaggerDocumentation = __importStar(require("./swagger.json"));
 const buildServer = () => {
@@ -42,17 +41,10 @@ const buildServer = () => {
     // Middleware
     server.use(express_1.default.urlencoded({ extended: true }));
     server.use(express_1.default.json());
-    server.use((0, cookie_parser_1.default)());
     server.use((0, express_fingerprint_1.default)({
         // @ts-ignore
         parameters: [express_fingerprint_1.default.useragent, express_fingerprint_1.default.acceptHeaders]
     }));
-    // server.use((req, res, next) => {
-    // 	res.header('Access-Control-Allow-Origin', '*'); // замените "*" на ваш список разрешенных доменов, если необходимо
-    // 	res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,PATCH');
-    // 	res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    // 	next();
-    // });
     server.get('/', (req, res) => {
         res.status(200).send({
             message: 'Hello World!'

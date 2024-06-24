@@ -76,6 +76,9 @@
                                         },
                                         "accessTokenExpiration": {
                                             "type": "string"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string"
                                         }
                                     }
                                 }
@@ -144,6 +147,9 @@
                                         },
                                         "accessTokenExpiration": {
                                             "type": "string"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string"
                                         }
                                     }
                                 }
@@ -210,6 +216,9 @@
                                             "type": "string"
                                         },
                                         "accessTokenExpiration": {
+                                            "type": "string"
+                                        },
+                                        "refreshToken": {
                                             "type": "string"
                                         }
                                     }
