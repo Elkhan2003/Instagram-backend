@@ -9,15 +9,15 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma_1 = require("../../plugins/prisma");
 const redis_1 = require("../../plugins/redis");
 const mailer_1 = require("../../plugins/mailer");
-const constants_1 = require("../../constants");
 const generateTokens = (payload) => {
     const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
         expiresIn: '1m'
     });
+    const accessTokenExpiration = new Date().getTime() + 15 * 60 * 1000;
     const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
         expiresIn: '15d'
     });
-    return { accessToken, refreshToken };
+    return { accessToken, accessTokenExpiration, refreshToken };
 };
 const registerUser = async (req, res) => {
     const { email, password, userName, photo } = req.body;
@@ -75,7 +75,7 @@ const registerUser = async (req, res) => {
             }
         });
         const payload = { id, email, userName, photo };
-        const { accessToken, refreshToken } = generateTokens(payload);
+        const { accessToken, accessTokenExpiration, refreshToken } = generateTokens(payload);
         await prisma_1.prisma.refreshSession.create({
             data: {
                 userId: id,
@@ -88,7 +88,7 @@ const registerUser = async (req, res) => {
         res.status(201).send({
             message: 'Пользователь успешно зарегистрировался',
             accessToken,
-            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
+            accessTokenExpiration,
             refreshToken
         });
     }
@@ -132,7 +132,7 @@ const loginUser = async (req, res) => {
             userName: user.userName,
             photo: user.photo
         };
-        const { accessToken, refreshToken } = generateTokens(payload);
+        const { accessToken, accessTokenExpiration, refreshToken } = generateTokens(payload);
         if (existingSession) {
             await prisma_1.prisma.refreshSession.update({
                 where: { id: existingSession.id },
@@ -155,7 +155,7 @@ const loginUser = async (req, res) => {
         }
         res.status(200).send({
             accessToken,
-            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
+            accessTokenExpiration,
             refreshToken
         });
     }
@@ -202,7 +202,7 @@ const refreshToken = async (req, res) => {
             userName: payload.userName,
             photo: payload.photo
         };
-        const { accessToken, refreshToken: newRefreshToken } = generateTokens(newPayload);
+        const { accessToken, accessTokenExpiration, refreshToken: newRefreshToken } = generateTokens(newPayload);
         await prisma_1.prisma.refreshSession.update({
             where: { id: existingSession.id },
             data: {
@@ -212,7 +212,7 @@ const refreshToken = async (req, res) => {
         });
         res.status(200).send({
             accessToken,
-            accessTokenExpiration: constants_1.ACCESS_TOKEN_EXPIRATION,
+            accessTokenExpiration,
             refreshToken: newRefreshToken
         });
     }
