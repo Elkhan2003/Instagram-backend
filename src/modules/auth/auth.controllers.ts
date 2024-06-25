@@ -5,16 +5,16 @@ import jwt from 'jsonwebtoken';
 import { prisma } from '../../plugins/prisma';
 import { redis } from '../../plugins/redis';
 import { mailer } from '../../plugins/mailer';
-import { ACCESS_TOKEN_EXPIRATION } from '../../constants';
 
 const generateTokens = (payload: object) => {
 	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
 		expiresIn: '1m'
 	});
+	const accessTokenExpiration = new Date().getTime() + 1 * 60 * 1000;
 	const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
 		expiresIn: '15d'
 	});
-	return { accessToken, refreshToken };
+	return { accessToken, accessTokenExpiration, refreshToken };
 };
 
 const registerUser = async (req: Request, res: Response) => {
@@ -83,7 +83,8 @@ const registerUser = async (req: Request, res: Response) => {
 		});
 
 		const payload = { id, email, userName, photo };
-		const { accessToken, refreshToken } = generateTokens(payload);
+		const { accessToken, accessTokenExpiration, refreshToken } =
+			generateTokens(payload);
 
 		await prisma.refreshSession.create({
 			data: {
@@ -98,7 +99,7 @@ const registerUser = async (req: Request, res: Response) => {
 		res.status(201).send({
 			message: 'Пользователь успешно зарегистрировался',
 			accessToken,
-			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+			accessTokenExpiration,
 			refreshToken
 		});
 	} catch (error) {
@@ -148,7 +149,8 @@ const loginUser = async (req: Request, res: Response) => {
 			userName: user.userName,
 			photo: user.photo
 		};
-		const { accessToken, refreshToken } = generateTokens(payload);
+		const { accessToken, accessTokenExpiration, refreshToken } =
+			generateTokens(payload);
 
 		if (existingSession) {
 			await prisma.refreshSession.update({
@@ -172,7 +174,7 @@ const loginUser = async (req: Request, res: Response) => {
 
 		res.status(200).send({
 			accessToken,
-			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+			accessTokenExpiration,
 			refreshToken
 		});
 	} catch (error) {
@@ -230,8 +232,11 @@ const refreshToken = async (req: Request, res: Response) => {
 			userName: payload.userName,
 			photo: payload.photo
 		};
-		const { accessToken, refreshToken: newRefreshToken } =
-			generateTokens(newPayload);
+		const {
+			accessToken,
+			accessTokenExpiration,
+			refreshToken: newRefreshToken
+		} = generateTokens(newPayload);
 
 		await prisma.refreshSession.update({
 			where: { id: existingSession.id },
@@ -243,7 +248,7 @@ const refreshToken = async (req: Request, res: Response) => {
 
 		res.status(200).send({
 			accessToken,
-			accessTokenExpiration: ACCESS_TOKEN_EXPIRATION,
+			accessTokenExpiration,
 			refreshToken: newRefreshToken
 		});
 	} catch (error) {

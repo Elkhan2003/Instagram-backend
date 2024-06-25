@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_щдв.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/constants.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/constants.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/auth/auth.controllers.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,7 +182,7 @@
       <workItem from="1719105176012" duration="213000" />
       <workItem from="1719123359035" duration="1917000" />
       <workItem from="1719204610078" duration="20554000" />
-      <workItem from="1719278448592" duration="632000" />
+      <workItem from="1719278448592" duration="2395000" />
     </task>
     <servers />
   </component>
