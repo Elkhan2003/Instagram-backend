@@ -1,9 +1,8 @@
 process.env.TZ = 'UTC+6';
-import { WebSocketServer } from 'ws';
 import { buildServer } from './app';
+import { initializeWebSocket } from './modules/chats/chatsWebSocket';
 
 const server = buildServer();
-
 const start = async () => {
 	const PORT: any = process.env.PORT || 3000;
 
@@ -20,40 +19,7 @@ const start = async () => {
 			}
 		);
 
-		// Create WebSocket server
-		const wss = new WebSocketServer({ server: httpServer });
-
-		wss.on('connection', (ws) => {
-			console.log('New client connected');
-
-			ws.on('message', (message: string) => {
-				const parsedMessage = JSON.parse(message);
-				switch (parsedMessage.event) {
-					case 'connection':
-						broadcastMessage(parsedMessage);
-						break;
-					case 'message':
-						broadcastMessage(parsedMessage);
-						break;
-					default:
-						ws.send(
-							JSON.stringify({
-								error: 'Unknown action'
-							})
-						);
-				}
-			});
-
-			const broadcastMessage = (message: string) => {
-				wss.clients.forEach((client) => {
-					client.send(JSON.stringify(message));
-				});
-			};
-
-			ws.on('close', () => {
-				console.log('Client disconnected');
-			});
-		});
+		initializeWebSocket(httpServer);
 	} catch (error) {
 		console.error(error);
 		process.exit(1);
