@@ -66,7 +66,7 @@ const handleNotificationMessage = (wss, ws, message) => {
             }));
             break;
         case 'notify':
-            // console.log(`Broadcasting notification: ${JSON.stringify(message)}`);
+            console.log(`Broadcasting notification: ${JSON.stringify(message)}`);
             broadcastMessage(wss, '', message, ws);
             break;
         default:
