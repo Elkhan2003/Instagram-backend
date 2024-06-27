@@ -307,7 +307,7 @@ const forgotPassword = async (req: Request, res: Response) => {
 			}
 		);
 
-		await redis.setData(`resetToken:${user.id}`, resetToken, 15 * 60);
+		await redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
 
 		const resetPasswordHtml = `
             <div style="font-family: Arial, sans-serif; color: #333;">

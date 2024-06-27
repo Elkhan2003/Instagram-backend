@@ -259,7 +259,7 @@ const forgotPassword = async (req, res) => {
         const resetToken = jsonwebtoken_1.default.sign({ id: user.id }, process.env.RESET_PASSWORD_TOKEN_SECRET, {
             expiresIn: '15m'
         });
-        await redis_1.redis.setData(`resetToken:${user.id}`, resetToken, 15 * 60);
+        await redis_1.redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
         const resetPasswordHtml = `
             <div style="font-family: Arial, sans-serif; color: #333;">
                 <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">

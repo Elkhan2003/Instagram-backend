@@ -2,39 +2,14 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.initializeWebSocket = void 0;
 const ws_1 = require("ws");
-let data = [
-    {
-        event: 'chat',
-        message: 'Hello from Insomnia',
-        username: 'Arlen'
-    },
-    {
-        event: 'chat',
-        message: 'Hello from Elcho',
-        username: 'Madina'
-    },
-    {
-        event: 'chat',
-        message: 'Hello from Alex',
-        username: 'Francklin'
-    }
-];
+const chatData = {};
 const initializeWebSocket = (httpServer) => {
     const wss = new ws_1.WebSocketServer({ server: httpServer });
     wss.on('connection', (ws, req) => {
-        const pathname = req.url || '';
-        console.log(`New client connected to ${pathname}`);
-        // Отправка всех сообщений из data новому клиенту
-        data.forEach((message) => {
-            if (pathname === '/chats' && message.event === 'chat') {
-                ws.send(JSON.stringify(message));
-            }
-        });
         ws.on('message', (message) => {
-            console.log(`Received message on ${pathname}:`, message);
             try {
                 const parsedMessage = JSON.parse(message);
-                handleMessage(wss, pathname, ws, parsedMessage);
+                handleIncomingMessage(wss, ws, parsedMessage);
             }
             catch (error) {
                 console.error('Error parsing message:', error);
@@ -42,35 +17,52 @@ const initializeWebSocket = (httpServer) => {
             }
         });
         ws.on('close', () => {
-            console.log(`Client disconnected from ${pathname}`);
+            console.log('Client disconnected');
         });
     });
     return wss;
 };
 exports.initializeWebSocket = initializeWebSocket;
-const handleMessage = (wss, pathname, ws, message) => {
-    switch (pathname) {
-        case '/chats':
-            handleChatMessages(wss, ws, message);
-            break;
-        case '/notifications':
-            handleNotificationMessages(wss, ws, message);
-            break;
-        default:
-            ws.send(JSON.stringify({ error: 'Unknown path' }));
-    }
-};
-const handleChatMessages = (wss, ws, message) => {
+const handleIncomingMessage = (wss, ws, message) => {
+    let currentRoom = null;
     switch (message.event) {
-        case 'chat':
-            console.log(`Broadcasting message in /chats:`, message);
-            broadcastMessage(wss, message);
+        case 'sendChatMessage':
+            handleSendChatMessage(wss, ws, message);
+            currentRoom = message.room;
+            break;
+        case 'getChatMessage':
+            handleGetChatMessage(wss, ws, message);
+            currentRoom = message.room;
+            break;
+        case 'subscribe':
+        case 'notify':
+            handleNotificationMessage(wss, ws, message);
             break;
         default:
-            ws.send(JSON.stringify({ error: 'Unknown action' }));
+            ws.send(JSON.stringify({ error: 'Unknown event' }));
     }
+    ws.on('close', () => {
+        console.log(`Client disconnected from room: ${currentRoom}`);
+    });
 };
-const handleNotificationMessages = (wss, ws, message) => {
+const handleSendChatMessage = (wss, ws, message) => {
+    const { room } = message;
+    if (!room) {
+        ws.send(JSON.stringify({ error: 'Room not specified' }));
+        return;
+    }
+    saveChatMessage(room, message);
+    broadcastMessage(wss, room, message, ws);
+};
+const handleGetChatMessage = (wss, ws, message) => {
+    const { room } = message;
+    if (!room) {
+        ws.send(JSON.stringify({ error: 'Room not specified' }));
+        return;
+    }
+    broadcastMessage(wss, room, message, ws);
+};
+const handleNotificationMessage = (wss, ws, message) => {
     switch (message.event) {
         case 'subscribe':
             ws.send(JSON.stringify({
@@ -79,17 +71,24 @@ const handleNotificationMessages = (wss, ws, message) => {
             }));
             break;
         case 'notify':
-            console.log(`Broadcasting notification:`, message);
-            broadcastMessage(wss, message);
+            broadcastMessage(wss, '', message, ws);
             break;
         default:
             ws.send(JSON.stringify({ error: 'Unknown action' }));
     }
 };
-const broadcastMessage = (wss, message) => {
+const broadcastMessage = (wss, room, message, ws) => {
+    const chatHistory = chatData[room] || [];
+    ws.send(JSON.stringify({ event: message.event, messages: chatHistory }));
     wss.clients.forEach((client) => {
-        if (client.readyState === ws_1.WebSocket.OPEN) {
-            client.send(JSON.stringify(message));
+        if (client.readyState === ws_1.WebSocket.OPEN && client !== ws) {
+            client.send(JSON.stringify({ event: message.event, messages: chatHistory }));
         }
     });
+};
+const saveChatMessage = (room, message) => {
+    if (!chatData[room]) {
+        chatData[room] = [];
+    }
+    chatData[room].push(message);
 };
