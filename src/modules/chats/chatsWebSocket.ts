@@ -42,6 +42,11 @@ const handleIncomingMessage = (
 	ws: WebSocket,
 	message: ParsedMessage
 ): void => {
+	if (message.room) {
+		const emails = message.room.split('+').sort();
+		message.room = `${emails[0]}+${emails[1]}`;
+	}
+
 	let currentRoom: string | null = null;
 	switch (message.event) {
 		case 'sendChatMessage':

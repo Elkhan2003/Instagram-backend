@@ -24,6 +24,10 @@ const initializeWebSocket = (httpServer) => {
 };
 exports.initializeWebSocket = initializeWebSocket;
 const handleIncomingMessage = (wss, ws, message) => {
+    if (message.room) {
+        const emails = message.room.split('+').sort();
+        message.room = `${emails[0]}+${emails[1]}`;
+    }
     let currentRoom = null;
     switch (message.event) {
         case 'sendChatMessage':
