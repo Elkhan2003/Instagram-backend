@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="" />
+    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/dist/swagger.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/swagger.json" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +54,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/elcho911/Desktop/peakspace-backend/src/modules/chats&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/elcho911/Desktop/peakspace-backend/src&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.stylelint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -66,11 +70,11 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/modules/chats" />
       <recent name="$PROJECT_DIR$/src/modules/auth" />
       <recent name="$PROJECT_DIR$/src/plugins" />
       <recent name="$PROJECT_DIR$/src/modules/crud" />
-      <recent name="$PROJECT_DIR$/src/modules/trash" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/src" />
@@ -187,7 +191,8 @@
       <workItem from="1719428276385" duration="5585000" />
       <workItem from="1719494684090" duration="757000" />
       <workItem from="1719495497799" duration="288000" />
-      <workItem from="1719497235379" duration="442000" />
+      <workItem from="1719497235379" duration="528000" />
+      <workItem from="1719498418851" duration="655000" />
     </task>
     <servers />
   </component>

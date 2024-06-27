@@ -256,7 +256,7 @@
         "/auth/forgot": {
             "post": {
                 "summary": "Восстановление пароля",
-                "description": "Запрос на восстановление пароля",
+                "description": "Запрос на восстановление пароля. Пользователь должен ввести свой email и URL-адрес фронтенда для перенаправления после успешного сброса. Пример запроса: const forgotData = { email: data.email, frontEndUrl: window.location.href };",
                 "tags": [
                     "Аутентификация"
                 ],
