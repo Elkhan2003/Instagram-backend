@@ -175,6 +175,24 @@
                 "tags": [
                     "Аутентификация"
                 ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string"
+                                    }
+                                },
+                                "required": [
+                                    "refreshToken"
+                                ]
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Успешный выход",
