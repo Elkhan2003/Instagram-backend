@@ -317,6 +317,15 @@ const forgotPassword = async (req: Request, res: Response) => {
 		});
 	}
 
+	if (!frontEndUrl) {
+		return res.status(400).send({
+			message: 'URL фронтенда обязателен',
+			hint: {
+				frontEndUrl: 'string'
+			}
+		});
+	}
+
 	// Регулярное выражение для проверки допустимого домена
 	const domainRegex = /^https?:\/\/[^\/]+/;
 	const matchedDomain = frontEndUrl.match(domainRegex);

@@ -256,7 +256,7 @@
         "/auth/forgot": {
             "post": {
                 "summary": "Восстановление пароля",
-                "description": "Запрос на восстановление пароля. Пользователь должен ввести свой email и URL-адрес фронтенда для перенаправления после успешного сброса. Пример запроса: const forgotData = { email: data.email, frontEndUrl: window.location.href };",
+                "description": "Запрос на восстановление пароля. Пользователь должен ввести свой email, а URL-адрес фронтенда должен автоматически браться из текущей ссылки для перенаправления после успешного сброса. Пример запроса:\n\n```javascript\nconst data = { email: inputValue, frontEndUrl: window.location.href };\n```",
                 "tags": [
                     "Аутентификация"
                 ],
@@ -309,7 +309,7 @@
         "/auth/reset-password": {
             "patch": {
                 "summary": "Сброс пароля",
-                "description": "Сброс пароля пользователя",
+                "description": "Сброс пароля пользователя. Пользователь должен ввести новый пароль и подтвердить его. Токен для сброса пароля передается через параметры URL. Пример запроса:\n\n```javascript\nconst [searchParams] = useSearchParams();\nconst token = searchParams.get('token');\nconst data = { token, newPassword: inputValue };\n```",
                 "tags": [
                     "Аутентификация"
                 ],
