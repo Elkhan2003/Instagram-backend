@@ -217,12 +217,10 @@ const loginUser = async (req: Request, res: Response) => {
 };
 
 const logoutUser = async (req: Request, res: Response) => {
-	const refreshToken = req.cookies.refreshToken;
-
 	try {
-		await prisma.refreshSession.deleteMany({
-			where: { refreshToken }
-		});
+		// await prisma.refreshSession.deleteMany({
+		// 	where: { refreshToken }
+		// });
 
 		res.status(200).send({ message: 'Пользователь успешно вышел из системы' });
 	} catch (error) {
