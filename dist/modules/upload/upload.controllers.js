@@ -15,7 +15,6 @@ const uploadPhoto = async (req, res) => {
             .replace(/:/g, '-')
             .split('.')[0];
         const fileName = `${originalName}_${uploadDate}.${fileExt}`;
-        // Upload the file to Supabase storage
         const { data, error } = await supabase_1.supabase.storage
             .from('avatars')
             .upload(`uploads/${fileName}`, req.file.buffer);
@@ -25,7 +24,10 @@ const uploadPhoto = async (req, res) => {
                 message: 'An error occurred while uploading the photo'
             });
         }
-        res.status(200).send({ file: fileName });
+        res.status(200).send({
+            fileName: fileName,
+            url: `https://gpseoginiqlrcwtfimkw.supabase.co/storage/v1/object/public/${data?.fullPath}`
+        });
     }
     catch (e) {
         console.error('Error in uploadPhoto:', e);

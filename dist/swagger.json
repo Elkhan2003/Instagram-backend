@@ -417,6 +417,56 @@
                     }
                 }
             }
+        },
+        "/upload/avatar": {
+            "post": {
+                "summary": "Загрузка аватара пользователя",
+                "description": "Загрузка аватара пользователя",
+                "tags": [
+                    "Загрузка файлов"
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Аватар успешно загружен",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "fileName": {
+                                            "type": "string"
+                                        },
+                                        "url": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Файл не загружен"
+                    },
+                    "500": {
+                        "description": "Ошибка при загрузке файла"
+                    }
+                }
+            }
         }
     }
 }

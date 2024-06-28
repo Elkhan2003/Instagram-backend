@@ -5,14 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/modules/upload/upload.controllers.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/modules/upload/upload.routes.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/plugins/multer.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/plugins/supabase.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/modules/upload/upload.controllers.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/upload/upload.controllers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/modules/upload/upload.routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/upload/upload.routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dist/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/dist/swagger.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/upload/upload.controllers.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/upload/upload.controllers.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/modules/upload/upload.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/upload/upload.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/swagger.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/swagger_OLD.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/swagger_OLD.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -203,7 +203,7 @@
       <workItem from="1719561663705" duration="5000" />
       <workItem from="1719572077460" duration="272000" />
       <workItem from="1719576221452" duration="660000" />
-      <workItem from="1719599652992" duration="5468000" />
+      <workItem from="1719599652992" duration="7135000" />
     </task>
     <servers />
   </component>

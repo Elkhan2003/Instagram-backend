@@ -29,7 +29,8 @@ const uploadPhoto = async (req: Request, res: Response) => {
 		}
 
 		res.status(200).send({
-			avatarUrl: `https://gpseoginiqlrcwtfimkw.supabase.co/storage/v1/object/public/${data?.fullPath}`
+			fileName: fileName,
+			url: `https://gpseoginiqlrcwtfimkw.supabase.co/storage/v1/object/public/${data?.fullPath}`
 		});
 	} catch (e) {
 		console.error('Error in uploadPhoto:', e);

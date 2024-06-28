@@ -34,50 +34,36 @@
     }
   ],
   "paths": {
-    "/auth/sign-in": {
+    "/upload/avatar": {
       "post": {
-        "summary": "Вход",
-        "description": "Вход пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
+        "summary": "Загрузка аватара пользователя",
         "requestBody": {
-          "required": true,
           "content": {
-            "application/json": {
+            "multipart/form-data": {
               "schema": {
                 "type": "object",
                 "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
                   }
-                },
-                "required": [
-                  "email",
-                  "password"
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "200": {
-            "description": "Успешный вход",
+            "description": "Аватар успешно загружен",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "accessToken": {
+                    "fileName": {
                       "type": "string"
                     },
-                    "accessTokenExpiration": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
+                    "url": {
                       "type": "string"
                     }
                   }
@@ -86,352 +72,10 @@
             }
           },
           "400": {
-            "description": "Неверный логин или пароль"
+            "description": "Файл не загружен"
           },
           "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/sign-up": {
-      "post": {
-        "summary": "Регистрация",
-        "description": "Регистрация пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  },
-                  "userName": {
-                    "type": "string"
-                  },
-                  "photo": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "email",
-                  "password",
-                  "userName",
-                  "photo"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Успешная регистрация",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "accessToken": {
-                      "type": "string"
-                    },
-                    "accessTokenExpiration": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверные входные данные"
-          },
-          "409": {
-            "description": "Пользователь уже существует"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "summary": "Выход",
-        "description": "Выход пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "refreshToken": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "refreshToken"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный выход",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/refresh": {
-      "patch": {
-        "summary": "Обновление токена",
-        "description": "Обновление токена доступа",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "refreshToken": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "refreshToken"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешное обновление токена",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accessToken": {
-                      "type": "string"
-                    },
-                    "accessTokenExpiration": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Неверный токен обновления или отпечаток"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/forgot": {
-      "post": {
-        "summary": "Восстановление пароля",
-        "description": "Запрос на восстановление пароля",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "frontEndUrl": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Письмо для восстановления пароля отправлено",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверные входные данные"
-          },
-          "404": {
-            "description": "Пользователь не найден"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/reset-password": {
-      "patch": {
-        "summary": "Сброс пароля",
-        "description": "Сброс пароля пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "token": {
-                    "type": "string"
-                  },
-                  "newPassword": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "token",
-                  "newPassword"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Пароль успешно сброшен",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверный или просроченный токен"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/user": {
-      "get": {
-        "summary": "Получить пользователя",
-        "description": "Получение информации о пользователе",
-        "tags": [
-          "Аутентификация"
-        ],
-        "responses": {
-          "200": {
-            "description": "Успешное получение данных пользователя",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "profile": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "userName": {
-                          "type": "string"
-                        },
-                        "role": {
-                          "type": "string"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "isActive": {
-                          "type": "string"
-                        },
-                        "photo": {
-                          "type": "string"
-                        },
-                        "createdAt": {
-                          "type": "string"
-                        },
-                        "updatedAt": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Пользователь не аутентифицирован"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
+            "description": "Ошибка при загрузке файла"
           }
         }
       }
