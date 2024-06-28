@@ -464,7 +464,14 @@
                     },
                     "500": {
                         "description": "Ошибка при загрузке файла"
-                    }
+                    },
+                    "x-code-samples": [
+                        {
+                            "lang": "JavaScript",
+                            "label": "Axios Example",
+                            "source": "const formData = new FormData();\nformData.append('avatar', selectedFile);\n\ntry {\n  const response = await axios.post(\n    `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n    formData,\n    {\n      headers: {\n        'Content-Type': 'multipart/form-data'\n      }\n    }\n  );\n  console.log(response.data);\n} catch (error) {\n  console.error('Ошибка при загрузке файла:', error);\n}"
+                        }
+                    ]
                 }
             }
         }

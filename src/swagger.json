@@ -421,7 +421,7 @@
     "/upload/avatar": {
       "post": {
         "summary": "Загрузка аватара пользователя",
-        "description": "Загрузка аватара пользователя",
+        "description": "Пример кода загрузки файла\n\n```js\nconst [selectedFile, setSelectedFile] = useState<File | null>(null);\nsetSelectedFile(event.target.files[0]);\n\nconst formData = new FormData();\nformData.append('avatar', selectedFile);\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n  formData,\n  {\n    headers: {\n      'Content-Type': 'multipart/form-data'\n    }\n  }\n);\nconsole.log(response.data);\n```",
         "tags": [
           "Загрузка файлов"
         ],
