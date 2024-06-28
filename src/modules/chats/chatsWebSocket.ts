@@ -6,6 +6,7 @@ interface ParsedMessage {
 	event: string;
 	message?: string;
 	username?: string;
+	email?: string;
 	room?: string;
 }
 
