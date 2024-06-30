@@ -1,12 +1,15 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { Server } from 'http';
 import { IncomingMessage } from 'http';
+import moment from 'moment';
 
 interface ParsedMessage {
 	event: string;
 	message?: string;
 	username?: string;
+	email?: string;
 	room?: string;
+	time?: string;
 }
 
 interface ChatData {
@@ -42,6 +45,12 @@ const handleIncomingMessage = (
 	ws: WebSocket,
 	message: ParsedMessage
 ): void => {
+	if (message.room) {
+		const emails = message.room.split('+').sort();
+		message.room = `${emails[0]}+${emails[1]}`;
+		message.time = moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z');
+	}
+
 	let currentRoom: string | null = null;
 	switch (message.event) {
 		case 'sendChatMessage':
@@ -121,16 +130,33 @@ const broadcastMessage = (
 	ws: WebSocket
 ): void => {
 	const chatHistory = chatData[room] || [];
-	ws.send(JSON.stringify({ event: message.event, messages: chatHistory }));
 
 	wss.clients.forEach((client: WebSocket) => {
-		if (client.readyState === WebSocket.OPEN && client !== ws) {
+		if (client.readyState === WebSocket.OPEN) {
 			client.send(
 				JSON.stringify({ event: message.event, messages: chatHistory })
 			);
 		}
 	});
 };
+
+// const broadcastMessage = (
+// 	wss: WebSocketServer,
+// 	room: string,
+// 	message: ParsedMessage,
+// 	ws: WebSocket
+// ): void => {
+// 	const chatHistory = chatData[room] || [];
+// 	ws.send(JSON.stringify({ event: message.event, messages: chatHistory }));
+//
+// 	wss.clients.forEach((client: WebSocket) => {
+// 		if (client.readyState === WebSocket.OPEN && client !== ws) {
+// 			client.send(
+// 				JSON.stringify({ event: message.event, messages: chatHistory })
+// 			);
+// 		}
+// 	});
+// };
 
 const saveChatMessage = (room: string, message: ParsedMessage): void => {
 	if (!chatData[room]) {

@@ -140,24 +140,6 @@ const broadcastMessage = (
 	});
 };
 
-// const broadcastMessage = (
-// 	wss: WebSocketServer,
-// 	room: string,
-// 	message: ParsedMessage,
-// 	ws: WebSocket
-// ): void => {
-// 	const chatHistory = chatData[room] || [];
-// 	ws.send(JSON.stringify({ event: message.event, messages: chatHistory }));
-//
-// 	wss.clients.forEach((client: WebSocket) => {
-// 		if (client.readyState === WebSocket.OPEN && client !== ws) {
-// 			client.send(
-// 				JSON.stringify({ event: message.event, messages: chatHistory })
-// 			);
-// 		}
-// 	});
-// };
-
 const saveChatMessage = (room: string, message: ParsedMessage): void => {
 	if (!chatData[room]) {
 		chatData[room] = [];
