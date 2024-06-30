@@ -7,6 +7,7 @@ exports.initializeWebSocket = void 0;
 const ws_1 = require("ws");
 const moment_1 = __importDefault(require("moment"));
 const chatData = {};
+console.log(chatData);
 const initializeWebSocket = (httpServer) => {
     const wss = new ws_1.WebSocketServer({ server: httpServer });
     wss.on('connection', (ws, req) => {

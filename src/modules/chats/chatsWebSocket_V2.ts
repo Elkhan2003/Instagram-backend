@@ -17,21 +17,14 @@ interface ChatData {
 }
 
 const chatData: ChatData = {};
-const clients: { [email: string]: WebSocket } = {};
 
 export const initializeWebSocket = (httpServer: Server): WebSocketServer => {
 	const wss = new WebSocketServer({ server: httpServer });
 
 	wss.on('connection', (ws: WebSocket, req: IncomingMessage) => {
-		let userEmail: string | null = null;
-
 		ws.on('message', (message: string) => {
 			try {
 				const parsedMessage: ParsedMessage = JSON.parse(message);
-				if (parsedMessage.email) {
-					userEmail = parsedMessage.email;
-					clients[userEmail] = ws; // Сохраняем соединение
-				}
 				handleIncomingMessage(wss, ws, parsedMessage);
 			} catch (error) {
 				console.error('Error parsing message:', error);
@@ -41,9 +34,6 @@ export const initializeWebSocket = (httpServer: Server): WebSocketServer => {
 
 		ws.on('close', () => {
 			console.log('Client disconnected');
-			if (userEmail) {
-				delete clients[userEmail]; // Удаляем соединение при отключении
-			}
 		});
 	});
 
@@ -61,12 +51,15 @@ const handleIncomingMessage = (
 		message.time = moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z');
 	}
 
+	let currentRoom: string | null = null;
 	switch (message.event) {
 		case 'sendChatMessage':
 			handleSendChatMessage(wss, ws, message);
+			currentRoom = message.room!;
 			break;
 		case 'getChatMessage':
 			handleGetChatMessage(wss, ws, message);
+			currentRoom = message.room!;
 			break;
 		case 'subscribe':
 		case 'notify':
@@ -75,6 +68,10 @@ const handleIncomingMessage = (
 		default:
 			ws.send(JSON.stringify({ error: 'Unknown event' }));
 	}
+
+	ws.on('close', () => {
+		console.log(`Client disconnected from room: ${currentRoom}`);
+	});
 };
 
 const handleSendChatMessage = (
@@ -82,23 +79,13 @@ const handleSendChatMessage = (
 	ws: WebSocket,
 	message: ParsedMessage
 ): void => {
-	const { room, email, message: chatMessage } = message;
-	if (!room || !email || !chatMessage) {
-		ws.send(JSON.stringify({ error: 'Room, email, or message not specified' }));
+	const { room } = message;
+	if (!room) {
+		ws.send(JSON.stringify({ error: 'Room not specified' }));
 		return;
 	}
-
 	saveChatMessage(room, message);
-	const recipientEmail = room.split('+').find((e) => e !== email);
-	if (recipientEmail && clients[recipientEmail]) {
-		const chatHistory = chatData[room] || [];
-		clients[recipientEmail].send(
-			JSON.stringify({ event: 'newChatMessage', messages: chatHistory })
-		);
-		ws.send(JSON.stringify({ event: 'newChatMessage', messages: chatHistory }));
-	} else {
-		ws.send(JSON.stringify({ error: 'Recipient not connected' }));
-	}
+	broadcastMessage(wss, room, message, ws);
 };
 
 const handleGetChatMessage = (
@@ -111,8 +98,7 @@ const handleGetChatMessage = (
 		ws.send(JSON.stringify({ error: 'Room not specified' }));
 		return;
 	}
-	const chatHistory = chatData[room] || [];
-	ws.send(JSON.stringify({ event: message.event, messages: chatHistory }));
+	broadcastMessage(wss, room!, message, ws);
 };
 
 const handleNotificationMessage = (
@@ -130,15 +116,28 @@ const handleNotificationMessage = (
 			);
 			break;
 		case 'notify':
-			Object.values(clients).forEach((client) => {
-				if (client !== ws) {
-					client.send(JSON.stringify(message));
-				}
-			});
+			broadcastMessage(wss, '', message, ws);
 			break;
 		default:
 			ws.send(JSON.stringify({ error: 'Unknown action' }));
 	}
+};
+
+const broadcastMessage = (
+	wss: WebSocketServer,
+	room: string,
+	message: ParsedMessage,
+	ws: WebSocket
+): void => {
+	const chatHistory = chatData[room] || [];
+
+	wss.clients.forEach((client: WebSocket) => {
+		if (client.readyState === WebSocket.OPEN) {
+			client.send(
+				JSON.stringify({ event: message.event, messages: chatHistory })
+			);
+		}
+	});
 };
 
 const saveChatMessage = (room: string, message: ParsedMessage): void => {
