@@ -88,10 +88,6 @@ const handleNotificationMessage = (wss, ws, message) => {
 };
 const broadcastMessage = (wss, room, message, ws) => {
     const chatHistory = chatData[room] || [];
-    //
-    // ws.send(
-    // 	JSON.stringify({ event: message.event, messages: chatHistory })
-    // );
     wss.clients.forEach((client) => {
         if (client.readyState === ws_1.WebSocket.OPEN) {
             client.send(JSON.stringify({ event: message.event, messages: chatHistory }));

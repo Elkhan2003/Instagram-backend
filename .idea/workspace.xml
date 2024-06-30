@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_V2.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dist/modules/chats/chatsWebSocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chatsWebSocket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +203,7 @@
       <workItem from="1719726541648" duration="1778000" />
       <workItem from="1719749711523" duration="2501000" />
       <workItem from="1719768223729" duration="634000" />
-      <workItem from="1719770905404" duration="9865000" />
+      <workItem from="1719770905404" duration="12254000" />
     </task>
     <servers />
   </component>
