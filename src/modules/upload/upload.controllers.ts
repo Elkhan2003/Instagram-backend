@@ -1,6 +1,13 @@
 import { Request, Response } from 'express';
 import { supabase } from '../../plugins/supabase';
 
+const sanitizeFilename = (filename: string) => {
+	return filename
+		.replace(/[^a-z0-9_\-\.]/gi, '_')
+		.replace(/_+/g, '_')
+		.toLowerCase();
+};
+
 const uploadPhoto = async (req: Request, res: Response) => {
 	try {
 		if (!req.file) {
@@ -10,12 +17,13 @@ const uploadPhoto = async (req: Request, res: Response) => {
 		}
 
 		const fileExt = req.file.mimetype.split('/')[1];
-		const originalName = req.file.originalname.split('.')[0].replace(/ /g, '_');
+		const originalName = req.file.originalname.split('.')[0];
+		const sanitizedOriginalName = sanitizeFilename(originalName);
 		const uploadDate = new Date()
 			.toISOString()
 			.replace(/:/g, '-')
 			.split('.')[0];
-		const fileName = `${originalName}_${uploadDate}.${fileExt}`;
+		const fileName = `${sanitizedOriginalName}_${uploadDate}.${fileExt}`;
 
 		const { data, error } = await supabase.storage
 			.from('avatars')

@@ -1,6 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const supabase_1 = require("../../plugins/supabase");
+const sanitizeFilename = (filename) => {
+    return filename
+        .replace(/[^a-z0-9_\-\.]/gi, '_')
+        .replace(/_+/g, '_')
+        .toLowerCase();
+};
 const uploadPhoto = async (req, res) => {
     try {
         if (!req.file) {
@@ -9,12 +15,13 @@ const uploadPhoto = async (req, res) => {
             });
         }
         const fileExt = req.file.mimetype.split('/')[1];
-        const originalName = req.file.originalname.split('.')[0].replace(/ /g, '_');
+        const originalName = req.file.originalname.split('.')[0];
+        const sanitizedOriginalName = sanitizeFilename(originalName);
         const uploadDate = new Date()
             .toISOString()
             .replace(/:/g, '-')
             .split('.')[0];
-        const fileName = `${originalName}_${uploadDate}.${fileExt}`;
+        const fileName = `${sanitizedOriginalName}_${uploadDate}.${fileExt}`;
         const { data, error } = await supabase_1.supabase.storage
             .from('avatars')
             .upload(`uploads/${fileName}`, req.file.buffer);

@@ -10,13 +10,13 @@ const types = [
 	'image/gif',
 	'image/webp',
 	'image/ico',
-	'image/svg+xml', // SVG-изображения
-	'image/bmp', // BMP-изображения
-	'image/tiff', // TIFF-изображения
-	'image/vnd.microsoft.icon', // ICO-изображения
-	'image/vnd.adobe.photoshop', // Photoshop PSD-файлы
-	'image/x-icon', // Ico-изображения
-	'image/vnd.dwg' // DWG-изображения
+	'image/svg+xml',
+	'image/bmp',
+	'image/tiff',
+	'image/vnd.microsoft.icon',
+	'image/vnd.adobe.photoshop',
+	'image/x-icon',
+	'image/vnd.dwg'
 ];
 
 const fileFilter = (
