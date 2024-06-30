@@ -19,7 +19,9 @@ const types = [
     'image/vnd.microsoft.icon',
     'image/vnd.adobe.photoshop',
     'image/x-icon',
-    'image/vnd.dwg'
+    'image/vnd.dwg',
+    'image/heic',
+    'image/heif'
 ];
 const fileFilter = (req, file, cb) => {
     if (types.includes(file.mimetype)) {
