@@ -1,6 +1,7 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { Server } from 'http';
 import { IncomingMessage } from 'http';
+import moment from 'moment';
 
 interface ParsedMessage {
 	event: string;
@@ -8,6 +9,7 @@ interface ParsedMessage {
 	username?: string;
 	email?: string;
 	room?: string;
+	time?: string;
 }
 
 interface ChatData {
@@ -46,6 +48,7 @@ const handleIncomingMessage = (
 	if (message.room) {
 		const emails = message.room.split('+').sort();
 		message.room = `${emails[0]}+${emails[1]}`;
+		message.time = moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z');
 	}
 
 	let currentRoom: string | null = null;
