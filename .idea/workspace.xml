@@ -4,15 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_V3.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_V4.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/modules/chats/chatsWebSocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chatsWebSocket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_V2.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_old.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_old.ts" afterDir="false" />
-    </list>
+    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -211,7 +203,7 @@
       <workItem from="1719770905404" duration="13668000" />
       <workItem from="1719788253435" duration="7117000" />
       <workItem from="1719857160000" duration="764000" />
-      <workItem from="1719929792116" duration="8993000" />
+      <workItem from="1719929792116" duration="9082000" />
     </task>
     <servers />
   </component>
