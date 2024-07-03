@@ -22,15 +22,14 @@ interface Room {
 }
 
 const rooms: Record<string, Room> = {}; // Хранилище комнат
-const connectedUsers: User[] = []; // Хранилище всех подключенных пользователей
 
 const sortEmails = (emails: string): string => {
 	return emails.split('+').sort().join('+');
 };
 
 const handleMessage = (ws: WebSocket, payload: any): void => {
-	let { message, name, email } = payload;
-	const roomId = sortEmails(payload.roomId);
+	let { roomId, message, name, email } = payload;
+	roomId = sortEmails(roomId);
 
 	if (!rooms[roomId]) {
 		// Комната не существует, создаем новую
@@ -71,7 +70,8 @@ const handleMessage = (ws: WebSocket, payload: any): void => {
 };
 
 const handleGetMessages = (ws: WebSocket, payload: any): void => {
-	const roomId = sortEmails(payload.roomId);
+	let { roomId } = payload;
+	roomId = sortEmails(roomId);
 
 	if (!rooms[roomId]) {
 		// Комната не существует, создаем новую
@@ -90,51 +90,31 @@ const handleGetMessages = (ws: WebSocket, payload: any): void => {
 	);
 };
 
-const handleCallRequest = (ws: WebSocket, payload: any): void => {
-	const { callUrl, email } = payload;
-
-	// Ищем пользователя среди всех подключенных
-	const user = connectedUsers.find((user) => user.email === email);
-	if (user) {
-		user.ws.send(
-			JSON.stringify({
-				type: 'callRequest',
-				payload: { callUrl }
-			})
-		);
-	} else {
-		ws.send(JSON.stringify({ error: 'User not connected' }));
-	}
-};
-
 const handleUserLeft = (ws: WebSocket): void => {
 	for (const roomId in rooms) {
 		const index = rooms[roomId].users.findIndex((user) => user.ws === ws);
 		if (index !== -1) {
+			const name = rooms[roomId].users[index].name;
 			rooms[roomId].users.splice(index, 1);
 
 			// Отправляем сообщение о выходе пользователя
 			rooms[roomId].users.forEach((user) => {
 				user.ws.send(
-					JSON.stringify({
-						type: 'userLeft',
-						payload: { userId: ws, name: rooms[roomId].users[index].name }
-					})
+					JSON.stringify({ type: 'userLeft', payload: { userId: ws, name } })
 				);
 			});
 
-			// Оставляем комнату и ее сообщения, даже если в ней больше нет пользователей
+			// ! Удаляем комнату, если в ней остался только один пользователь
+			// if (rooms[roomId].users.length === 0) {
+			// 	delete rooms[roomId];
+			// }
+
+			// ! Оставляем комнату и ее сообщения, даже если в ней больше нет пользователей
 			if (rooms[roomId].users.length === 0) {
 				// Комната остается в памяти с пустым списком пользователей
 				rooms[roomId].users = [];
 			}
 		}
-	}
-
-	// Удаляем пользователя из глобального списка подключенных пользователей
-	const userIndex = connectedUsers.findIndex((user) => user.ws === ws);
-	if (userIndex !== -1) {
-		connectedUsers.splice(userIndex, 1);
 	}
 };
 
@@ -149,13 +129,6 @@ const handleWebSocketMessage = (ws: WebSocket, message: string): void => {
 				break;
 			case 'getMessage':
 				handleGetMessages(ws, payload);
-				break;
-			case 'callRequest':
-				handleCallRequest(ws, payload);
-				break;
-			case 'connect':
-				// Добавляем пользователя в глобальный список подключенных пользователей
-				connectedUsers.push({ ws, name: payload.name, email: payload.email });
 				break;
 			default:
 				ws.send(JSON.stringify({ error: 'Invalid message type' }));
