@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket_V1.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/modules/chats/chatsWebSocket.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/modules/chats/chatsWebSocket.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dist/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/dist/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chats.controller.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chats.controller_old.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chats.routes.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/modules/chats/chatsWebSocket.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/routes/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/routes/index.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -217,7 +209,8 @@
       <workItem from="1719945468380" duration="305000" />
       <workItem from="1719946009623" duration="1721000" />
       <workItem from="1719974678246" duration="912000" />
-      <workItem from="1719975761907" duration="718000" />
+      <workItem from="1719975761907" duration="970000" />
+      <workItem from="1719978945273" duration="2598000" />
     </task>
     <servers />
   </component>

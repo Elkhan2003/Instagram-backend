@@ -61,13 +61,13 @@ const handleGetMessages = (ws, payload) => {
     }));
 };
 const handleCallRequest = (ws, payload) => {
-    const { callUrl, email } = payload;
+    const { callUrl, email, name, image } = payload;
     // Ищем пользователя среди всех подключенных
     const user = connectedUsers.find((user) => user.email === email);
     if (user) {
         user.ws.send(JSON.stringify({
             type: 'callRequest',
-            payload: { callUrl }
+            payload: { callUrl, email, name, image }
         }));
     }
     else {
@@ -83,7 +83,7 @@ const handleUserLeft = (ws) => {
             rooms[roomId].users.forEach((user) => {
                 user.ws.send(JSON.stringify({
                     type: 'userLeft',
-                    payload: { userId: ws, name: rooms[roomId].users[index].name }
+                    payload: { userId: ws, name: rooms[roomId].users[index]?.name }
                 }));
             });
             // Оставляем комнату и ее сообщения, даже если в ней больше нет пользователей
@@ -115,7 +115,12 @@ const handleWebSocketMessage = (ws, message) => {
                 break;
             case 'connect':
                 // Добавляем пользователя в глобальный список подключенных пользователей
-                connectedUsers.push({ ws, name: payload.name, email: payload.email });
+                connectedUsers.push({
+                    ws,
+                    name: payload.name,
+                    email: payload.email,
+                    image: payload.image
+                });
                 break;
             default:
                 ws.send(JSON.stringify({ error: 'Invalid message type' }));

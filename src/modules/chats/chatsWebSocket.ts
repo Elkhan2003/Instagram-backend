@@ -6,6 +6,7 @@ interface User {
 	ws: WebSocket;
 	name: string;
 	email: string;
+	image?: string;
 }
 
 interface Message {
@@ -91,7 +92,7 @@ const handleGetMessages = (ws: WebSocket, payload: any): void => {
 };
 
 const handleCallRequest = (ws: WebSocket, payload: any): void => {
-	const { callUrl, email } = payload;
+	const { callUrl, email, name, image } = payload;
 
 	// Ищем пользователя среди всех подключенных
 	const user = connectedUsers.find((user) => user.email === email);
@@ -99,7 +100,7 @@ const handleCallRequest = (ws: WebSocket, payload: any): void => {
 		user.ws.send(
 			JSON.stringify({
 				type: 'callRequest',
-				payload: { callUrl }
+				payload: { callUrl, email, name, image }
 			})
 		);
 	} else {
@@ -118,7 +119,7 @@ const handleUserLeft = (ws: WebSocket): void => {
 				user.ws.send(
 					JSON.stringify({
 						type: 'userLeft',
-						payload: { userId: ws, name: rooms[roomId].users[index].name }
+						payload: { userId: ws, name: rooms[roomId].users[index]?.name }
 					})
 				);
 			});
@@ -155,7 +156,12 @@ const handleWebSocketMessage = (ws: WebSocket, message: string): void => {
 				break;
 			case 'connect':
 				// Добавляем пользователя в глобальный список подключенных пользователей
-				connectedUsers.push({ ws, name: payload.name, email: payload.email });
+				connectedUsers.push({
+					ws,
+					name: payload.name,
+					email: payload.email,
+					image: payload.image
+				});
 				break;
 			default:
 				ws.send(JSON.stringify({ error: 'Invalid message type' }));
