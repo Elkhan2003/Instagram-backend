@@ -1,472 +1,503 @@
 {
-  "openapi": "3.0.0",
-  "info": {
-    "version": "1.0.0",
-    "title": "Документация по API Peakspace",
-    "description": "Этот API позволяет удобно взаимодействовать благодаря Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-peakspace.elcho.dev/api/v1",
-    "license": {
-      "name": "Copyright © 2021-2024. Все права защищены",
-      "url": "https://elcho.dev"
-    }
-  },
-  "servers": [
-    {
-      "url": "https://api-peakspace.elcho.dev/api/v1",
-      "description": "Сервер для продакшена"
-    },
-    {
-      "url": "http://localhost:5000/api/v1",
-      "description": "Сервер для разработки"
-    }
-  ],
-  "components": {
-    "securitySchemes": {
-      "BearerAuth": {
-        "type": "http",
-        "scheme": "bearer",
-        "bearerFormat": "JWT"
-      }
-    }
-  },
-  "security": [
-    {
-      "BearerAuth": []
-    }
-  ],
-  "paths": {
-    "/auth/sign-in": {
-      "post": {
-        "summary": "Вход",
-        "description": "Вход пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "email",
-                  "password"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешный вход",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accessToken": {
-                      "type": "string"
-                    },
-                    "accessTokenExpiration": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверный логин или пароль"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/sign-up": {
-      "post": {
-        "summary": "Регистрация",
-        "description": "Регистрация пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "password": {
-                    "type": "string"
-                  },
-                  "userName": {
-                    "type": "string"
-                  },
-                  "photo": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "email",
-                  "password",
-                  "userName",
-                  "photo"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Успешная регистрация",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    },
-                    "accessToken": {
-                      "type": "string"
-                    },
-                    "accessTokenExpiration": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверные входные данные"
-          },
-          "409": {
-            "description": "Пользователь уже существует"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/logout": {
-      "post": {
-        "summary": "Выход",
-        "description": "Выход пользователя",
-        "tags": [
-          "Аутентификация"
-        ],
-        "responses": {
-          "200": {
-            "description": "Успешный выход",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/refresh": {
-      "patch": {
-        "summary": "Обновление токена",
-        "description": "Обновление токена доступа",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "refreshToken": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "refreshToken"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Успешное обновление токена",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accessToken": {
-                      "type": "string"
-                    },
-                    "accessTokenExpiration": {
-                      "type": "string"
-                    },
-                    "refreshToken": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Неверный токен обновления или отпечаток"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/forgot": {
-      "post": {
-        "summary": "Восстановление пароля",
-        "description": "Запрос на восстановление пароля. Пользователь должен ввести свой email, а URL-адрес фронтенда должен автоматически браться из текущей ссылки для перенаправления после успешного сброса. Пример запроса:\n\n```javascript\nconst data = { email: inputValue, frontEndUrl: window.location.href };\n```",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "email": {
-                    "type": "string"
-                  },
-                  "frontEndUrl": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Письмо для восстановления пароля отправлено",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверные входные данные"
-          },
-          "404": {
-            "description": "Пользователь не найден"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/reset-password": {
-      "patch": {
-        "summary": "Сброс пароля",
-        "description": "Сброс пароля пользователя. Пользователь должен ввести новый пароль и подтвердить его. Токен для сброса пароля передается через параметры URL. Пример запроса:\n\n```javascript\nconst [searchParams] = useSearchParams();\nconst token = searchParams.get('token');\nconst data = { token, newPassword: inputValue };\n```",
-        "tags": [
-          "Аутентификация"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "token": {
-                    "type": "string"
-                  },
-                  "newPassword": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "token",
-                  "newPassword"
-                ]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Пароль успешно сброшен",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Неверный или просроченный токен"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/auth/user": {
-      "get": {
-        "summary": "Получить пользователя",
-        "description": "Получение информации о пользователе",
-        "tags": [
-          "Аутентификация"
-        ],
-        "responses": {
-          "200": {
-            "description": "Успешное получение данных пользователя",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "profile": {
-                      "type": "object",
-                      "properties": {
-                        "id": {
-                          "type": "string"
-                        },
-                        "userName": {
-                          "type": "string"
-                        },
-                        "role": {
-                          "type": "string"
-                        },
-                        "email": {
-                          "type": "string"
-                        },
-                        "isActive": {
-                          "type": "string"
-                        },
-                        "photo": {
-                          "type": "string"
-                        },
-                        "createdAt": {
-                          "type": "string"
-                        },
-                        "updatedAt": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Пользователь не аутентифицирован"
-          },
-          "500": {
-            "description": "Внутренняя ошибка сервера"
-          }
-        }
-      }
-    },
-    "/upload/avatar": {
-      "post": {
-        "summary": "Загрузка аватара пользователя",
-        "description": "Пример кода загрузки файла\n\n```js\nconst [selectedFile, setSelectedFile] = useState<File | null>(null);\nsetSelectedFile(event.target.files[0]);\n\nconst formData = new FormData();\nformData.append('avatar', selectedFile);\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n  formData,\n  {\n    headers: {\n      'Content-Type': 'multipart/form-data'\n    }\n  }\n);\nconsole.log(response.data);\n```",
-        "tags": [
-          "Загрузка файлов"
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "avatar": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Аватар успешно загружен",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "fileName": {
-                      "type": "string"
-                    },
-                    "url": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Файл не загружен"
-          },
-          "500": {
-            "description": "Ошибка при загрузке файла"
-          }
-        }
-      }
-    }
-  }
+	"openapi": "3.0.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Документация по API Instagram",
+		"description": "Этот API позволяет удобно взаимодействовать благодаря Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-instagram.elcho.dev/api/v1",
+		"license": {
+			"name": "Copyright © 2021-2024. Все права защищены",
+			"url": "https://elcho.dev"
+		}
+	},
+	"servers": [
+		{
+			"url": "https://api-instagram.elcho.dev/api/v1",
+			"description": "Сервер для продакшена"
+		},
+		{
+			"url": "http://localhost:5000/api/v1",
+			"description": "Сервер для разработки"
+		}
+	],
+	"components": {
+		"securitySchemes": {
+			"BearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"security": [
+		{
+			"BearerAuth": []
+		}
+	],
+	"paths": {
+		"/auth/sign-in": {
+			"post": {
+				"summary": "Вход",
+				"description": "Вход пользователя",
+				"tags": ["Аутентификация"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									}
+								},
+								"required": ["email", "password"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Успешный вход",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"accessToken": {
+											"type": "string"
+										},
+										"accessTokenExpiration": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Неверный логин или пароль"
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/auth/sign-up": {
+			"post": {
+				"summary": "Регистрация",
+				"description": "Регистрация пользователя",
+				"tags": ["Аутентификация"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"password": {
+										"type": "string"
+									},
+									"username": {
+										"type": "string"
+									},
+									"photo": {
+										"type": "string"
+									}
+								},
+								"required": ["email", "password", "username", "photo"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Успешная регистрация",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										},
+										"accessToken": {
+											"type": "string"
+										},
+										"accessTokenExpiration": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Неверные входные данные"
+					},
+					"409": {
+						"description": "Пользователь уже существует"
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"summary": "Выход",
+				"description": "Выход пользователя",
+				"tags": ["Аутентификация"],
+				"responses": {
+					"200": {
+						"description": "Успешный выход",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/auth/refresh": {
+			"patch": {
+				"summary": "Обновление токена",
+				"description": "Обновление токена доступа",
+				"tags": ["Аутентификация"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"refreshToken": {
+										"type": "string"
+									}
+								},
+								"required": ["refreshToken"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Успешное обновление токена",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"accessToken": {
+											"type": "string"
+										},
+										"accessTokenExpiration": {
+											"type": "string"
+										},
+										"refreshToken": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"401": {
+						"description": "Неверный токен обновления или отпечаток"
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/auth/forgot": {
+			"post": {
+				"summary": "Восстановление пароля",
+				"description": "Запрос на восстановление пароля. Пользователь должен ввести свой email, а URL-адрес фронтенда должен автоматически браться из текущей ссылки для перенаправления после успешного сброса. Пример запроса:\n\n```javascript\nconst data = { email: inputValue, frontEndUrl: window.location.href };\n```",
+				"tags": ["Аутентификация"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"email": {
+										"type": "string"
+									},
+									"frontEndUrl": {
+										"type": "string"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Письмо для восстановления пароля отправлено",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Неверные входные данные"
+					},
+					"404": {
+						"description": "Пользователь не найден"
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/auth/reset-password": {
+			"patch": {
+				"summary": "Сброс пароля",
+				"description": "Сброс пароля пользователя. Пользователь должен ввести новый пароль и подтвердить его. Токен для сброса пароля передается через параметры URL. Пример запроса:\n\n```javascript\nconst [searchParams] = useSearchParams();\nconst token = searchParams.get('token');\nconst data = { token, newPassword: inputValue };\n```",
+				"tags": ["Аутентификация"],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"token": {
+										"type": "string"
+									},
+									"newPassword": {
+										"type": "string"
+									}
+								},
+								"required": ["token", "newPassword"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Пароль успешно сброшен",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Неверный или просроченный токен"
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/auth/user": {
+			"get": {
+				"summary": "Получить пользователя",
+				"description": "Получение информации о пользователе",
+				"tags": ["Аутентификация"],
+				"responses": {
+					"200": {
+						"description": "Успешное получение данных пользователя",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"profile": {
+											"type": "object",
+											"properties": {
+												"id": {
+													"type": "string"
+												},
+												"username": {
+													"type": "string"
+												},
+												"role": {
+													"type": "string"
+												},
+												"email": {
+													"type": "string"
+												},
+												"isActive": {
+													"type": "string"
+												},
+												"photo": {
+													"type": "string"
+												},
+												"createdAt": {
+													"type": "string"
+												},
+												"updatedAt": {
+													"type": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Пользователь не аутентифицирован"
+					},
+					"500": {
+						"description": "Внутренняя ошибка сервера"
+					}
+				}
+			}
+		},
+		"/upload/file": {
+			"post": {
+				"summary": "Загрузка файла пользователя",
+				"description": "Пример кода загрузки файла\n\n```js\nconst [selectedFile, setSelectedFile] = useState<File | null>(null);\nsetSelectedFile(event.target.files[0]);\n\nconst formData = new FormData();\nformData.append('avatar', selectedFile);\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n  formData\n);\nconsole.log(response.data);\n```",
+				"tags": ["Загрузка файлов"],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"file": {
+										"type": "string",
+										"format": "binary"
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Аватар успешно загружен",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"name": {
+											"type": "string"
+										},
+										"format": {
+											"type": "string"
+										},
+										"url": {
+											"type": "string"
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Файл не загружен"
+					},
+					"500": {
+						"description": "Ошибка при загрузке файла"
+					}
+				}
+			}
+		},
+		"/upload/files": {
+			"post": {
+				"summary": "Загрузка файлов пользователя",
+				"description": "Пример кода загрузки нескольких файлов (до 10 файлов одновременно)\n\n```js\nconst [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);\nsetSelectedFiles(event.target.files);\n\nconst formData = new FormData();\nArray.from(selectedFiles).forEach(file => {\n  formData.append('files', file);\n});\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/files`,\n  formData\n);\nconsole.log(response.data);\n```",
+				"tags": ["Загрузка файлов"],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"files": {
+										"type": "array",
+										"items": {
+											"type": "string",
+											"format": "binary"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Файлы успешно загружены",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"name": {
+												"type": "string"
+											},
+											"format": {
+												"type": "string"
+											},
+											"url": {
+												"type": "string"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Файлы не загружены"
+					},
+					"500": {
+						"description": "Ошибка при загрузке файлов"
+					}
+				}
+			}
+		}
+	}
 }

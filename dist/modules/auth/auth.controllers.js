@@ -21,20 +21,20 @@ const generateTokens = (payload) => {
 };
 const registerUser = async (req, res) => {
     try {
-        const { email, password, userName, photo } = req.body;
+        const { email, password, username, photo } = req.body;
         const { fingerprint } = req;
         // Валидация структуры запроса и полей
         if (typeof req.body !== 'object' ||
             !email ||
             !password ||
-            !userName ||
+            !username ||
             !photo) {
             return res.status(400).send({
                 message: 'Все поля обязательны для заполнения',
                 hint: {
                     email: 'string',
                     password: 'string',
-                    userName: 'string',
+                    username: 'string',
                     photo: 'string'
                 }
             });
@@ -42,14 +42,14 @@ const registerUser = async (req, res) => {
         // Валидация длины полей
         if (email.length < 2 ||
             password.length < 2 ||
-            userName.length < 2 ||
+            username.length < 2 ||
             photo.length < 2) {
             return res.status(400).send({
                 message: 'Все поля должны содержать минимум 2 символа',
                 hint: {
                     email: 'минимум 2 символа',
                     password: 'минимум 2 символа',
-                    userName: 'минимум 2 символа',
+                    username: 'минимум 2 символа',
                     photo: 'минимум 2 символа'
                 }
             });
@@ -78,14 +78,14 @@ const registerUser = async (req, res) => {
             data: {
                 email,
                 password: hashedPassword,
-                userName,
+                username,
                 photo,
                 createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
                 updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
             }
         });
         // Генерация токенов
-        const payload = { id, email, userName, photo };
+        const payload = { id, email, username, photo };
         const { accessToken, accessTokenExpiration, refreshToken } = generateTokens(payload);
         // Создание новой сессии
         await prisma_1.prisma.refreshSession.create({
@@ -156,7 +156,7 @@ const loginUser = async (req, res) => {
         const payload = {
             id: user.id,
             email,
-            userName: user.userName,
+            username: user.username,
             photo: user.photo
         };
         const { accessToken, accessTokenExpiration, refreshToken } = generateTokens(payload);
@@ -234,7 +234,7 @@ const refreshToken = async (req, res) => {
         const newPayload = {
             id: payload.id,
             email: payload.email,
-            userName: payload.userName,
+            username: payload.username,
             photo: payload.photo
         };
         const { accessToken, accessTokenExpiration, refreshToken: newRefreshToken } = generateTokens(newPayload);
@@ -426,7 +426,7 @@ const getUser = async (req, res) => {
     }
     const userData = {
         id: data.id,
-        userName: data.userName,
+        username: data.username,
         role: data.role,
         email: data.email,
         isActive: data.isActive,

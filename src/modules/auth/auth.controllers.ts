@@ -19,7 +19,7 @@ const generateTokens = (payload: object) => {
 
 const registerUser = async (req: Request, res: Response) => {
 	try {
-		const { email, password, userName, photo } = req.body;
+		const { email, password, username, photo } = req.body;
 		const { fingerprint } = req;
 
 		// Валидация структуры запроса и полей
@@ -27,7 +27,7 @@ const registerUser = async (req: Request, res: Response) => {
 			typeof req.body !== 'object' ||
 			!email ||
 			!password ||
-			!userName ||
+			!username ||
 			!photo
 		) {
 			return res.status(400).send({
@@ -35,7 +35,7 @@ const registerUser = async (req: Request, res: Response) => {
 				hint: {
 					email: 'string',
 					password: 'string',
-					userName: 'string',
+					username: 'string',
 					photo: 'string'
 				}
 			});
@@ -45,7 +45,7 @@ const registerUser = async (req: Request, res: Response) => {
 		if (
 			email.length < 2 ||
 			password.length < 2 ||
-			userName.length < 2 ||
+			username.length < 2 ||
 			photo.length < 2
 		) {
 			return res.status(400).send({
@@ -53,7 +53,7 @@ const registerUser = async (req: Request, res: Response) => {
 				hint: {
 					email: 'минимум 2 символа',
 					password: 'минимум 2 символа',
-					userName: 'минимум 2 символа',
+					username: 'минимум 2 символа',
 					photo: 'минимум 2 символа'
 				}
 			});
@@ -86,7 +86,7 @@ const registerUser = async (req: Request, res: Response) => {
 			data: {
 				email,
 				password: hashedPassword,
-				userName,
+				username,
 				photo,
 				createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
@@ -94,7 +94,7 @@ const registerUser = async (req: Request, res: Response) => {
 		});
 
 		// Генерация токенов
-		const payload = { id, email, userName, photo };
+		const payload = { id, email, username, photo };
 		const { accessToken, accessTokenExpiration, refreshToken } =
 			generateTokens(payload);
 
@@ -177,7 +177,7 @@ const loginUser = async (req: Request, res: Response) => {
 		const payload = {
 			id: user.id,
 			email,
-			userName: user.userName,
+			username: user.username,
 			photo: user.photo
 		};
 		const { accessToken, accessTokenExpiration, refreshToken } =
@@ -267,7 +267,7 @@ const refreshToken = async (req: Request, res: Response) => {
 		const newPayload = {
 			id: payload.id,
 			email: payload.email,
-			userName: payload.userName,
+			username: payload.username,
 			photo: payload.photo
 		};
 		const {
@@ -495,7 +495,7 @@ const getUser = async (req: Request, res: Response) => {
 
 	const userData = {
 		id: data.id,
-		userName: data.userName,
+		username: data.username,
 		role: data.role,
 		email: data.email,
 		isActive: data.isActive,

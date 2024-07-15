@@ -2,8 +2,8 @@
     "openapi": "3.0.0",
     "info": {
         "version": "1.0.0",
-        "title": "Документация по API Peakspace",
-        "description": "Этот API позволяет удобно взаимодействовать благодаря Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-peakspace.elcho.dev/api/v1",
+        "title": "Документация по API Instagram",
+        "description": "Этот API позволяет удобно взаимодействовать благодаря Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-instagram.elcho.dev/api/v1",
         "license": {
             "name": "Copyright © 2021-2024. Все права защищены",
             "url": "https://elcho.dev"
@@ -11,7 +11,7 @@
     },
     "servers": [
         {
-            "url": "https://api-peakspace.elcho.dev/api/v1",
+            "url": "https://api-instagram.elcho.dev/api/v1",
             "description": "Сервер для продакшена"
         },
         {
@@ -38,9 +38,7 @@
             "post": {
                 "summary": "Вход",
                 "description": "Вход пользователя",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -55,10 +53,7 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": [
-                                    "email",
-                                    "password"
-                                ]
+                                "required": ["email", "password"]
                             }
                         }
                     }
@@ -98,9 +93,7 @@
             "post": {
                 "summary": "Регистрация",
                 "description": "Регистрация пользователя",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -114,19 +107,14 @@
                                     "password": {
                                         "type": "string"
                                     },
-                                    "userName": {
+                                    "username": {
                                         "type": "string"
                                     },
                                     "photo": {
                                         "type": "string"
                                     }
                                 },
-                                "required": [
-                                    "email",
-                                    "password",
-                                    "userName",
-                                    "photo"
-                                ]
+                                "required": ["email", "password", "username", "photo"]
                             }
                         }
                     }
@@ -172,9 +160,7 @@
             "post": {
                 "summary": "Выход",
                 "description": "Выход пользователя",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "responses": {
                     "200": {
                         "description": "Успешный выход",
@@ -201,9 +187,7 @@
             "patch": {
                 "summary": "Обновление токена",
                 "description": "Обновление токена доступа",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -215,9 +199,7 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": [
-                                    "refreshToken"
-                                ]
+                                "required": ["refreshToken"]
                             }
                         }
                     }
@@ -257,9 +239,7 @@
             "post": {
                 "summary": "Восстановление пароля",
                 "description": "Запрос на восстановление пароля. Пользователь должен ввести свой email, а URL-адрес фронтенда должен автоматически браться из текущей ссылки для перенаправления после успешного сброса. Пример запроса:\n\n```javascript\nconst data = { email: inputValue, frontEndUrl: window.location.href };\n```",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -310,9 +290,7 @@
             "patch": {
                 "summary": "Сброс пароля",
                 "description": "Сброс пароля пользователя. Пользователь должен ввести новый пароль и подтвердить его. Токен для сброса пароля передается через параметры URL. Пример запроса:\n\n```javascript\nconst [searchParams] = useSearchParams();\nconst token = searchParams.get('token');\nconst data = { token, newPassword: inputValue };\n```",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -327,10 +305,7 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": [
-                                    "token",
-                                    "newPassword"
-                                ]
+                                "required": ["token", "newPassword"]
                             }
                         }
                     }
@@ -364,9 +339,7 @@
             "get": {
                 "summary": "Получить пользователя",
                 "description": "Получение информации о пользователе",
-                "tags": [
-                    "Аутентификация"
-                ],
+                "tags": ["Аутентификация"],
                 "responses": {
                     "200": {
                         "description": "Успешное получение данных пользователя",
@@ -381,7 +354,7 @@
                                                 "id": {
                                                     "type": "string"
                                                 },
-                                                "userName": {
+                                                "username": {
                                                     "type": "string"
                                                 },
                                                 "role": {
@@ -418,20 +391,18 @@
                 }
             }
         },
-        "/upload/avatar": {
+        "/upload/file": {
             "post": {
-                "summary": "Загрузка аватара пользователя",
-                "description": "Пример кода загрузки файла\n\n```js\nconst [selectedFile, setSelectedFile] = useState<File | null>(null);\nsetSelectedFile(event.target.files[0]);\n\nconst formData = new FormData();\nformData.append('avatar', selectedFile);\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n  formData,\n  {\n    headers: {\n      'Content-Type': 'multipart/form-data'\n    }\n  }\n);\nconsole.log(response.data);\n```",
-                "tags": [
-                    "Загрузка файлов"
-                ],
+                "summary": "Загрузка файла пользователя",
+                "description": "Пример кода загрузки файла\n\n```js\nconst [selectedFile, setSelectedFile] = useState<File | null>(null);\nsetSelectedFile(event.target.files[0]);\n\nconst formData = new FormData();\nformData.append('avatar', selectedFile);\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n  formData\n);\nconsole.log(response.data);\n```",
+                "tags": ["Загрузка файлов"],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "avatar": {
+                                    "file": {
                                         "type": "string",
                                         "format": "binary"
                                     }
@@ -448,7 +419,10 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "fileName": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "format": {
                                             "type": "string"
                                         },
                                         "url": {
@@ -464,6 +438,63 @@
                     },
                     "500": {
                         "description": "Ошибка при загрузке файла"
+                    }
+                }
+            }
+        },
+        "/upload/files": {
+            "post": {
+                "summary": "Загрузка файлов пользователя",
+                "description": "Пример кода загрузки нескольких файлов (до 10 файлов одновременно)\n\n```js\nconst [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);\nsetSelectedFiles(event.target.files);\n\nconst formData = new FormData();\nArray.from(selectedFiles).forEach(file => {\n  formData.append('files', file);\n});\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/files`,\n  formData\n);\nconsole.log(response.data);\n```",
+                "tags": ["Загрузка файлов"],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "files": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "string",
+                                            "format": "binary"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Файлы успешно загружены",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "format": {
+                                                "type": "string"
+                                            },
+                                            "url": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Файлы не загружены"
+                    },
+                    "500": {
+                        "description": "Ошибка при загрузке файлов"
                     }
                 }
             }
