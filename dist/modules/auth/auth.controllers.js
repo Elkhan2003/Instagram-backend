@@ -11,7 +11,7 @@ const redis_1 = require("../../plugins/redis");
 const mailer_1 = require("../../plugins/mailer");
 const generateTokens = (payload) => {
     const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1m'
+        expiresIn: '15m'
     });
     const accessTokenExpiration = new Date().getTime() + 15 * 60 * 1000;
     const refreshToken = jsonwebtoken_1.default.sign(payload, process.env.REFRESH_TOKEN_SECRET, {
