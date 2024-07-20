@@ -25,7 +25,7 @@ const getMePosts = async (req: Request, res: Response) => {
 		const data = await prisma.post.findMany({
 			where: { userId: req.user?.id }
 		});
-		res.status(200).send({ test: req.user, data });
+		res.status(200).send(data);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Внутренняя ошибка сервера' });

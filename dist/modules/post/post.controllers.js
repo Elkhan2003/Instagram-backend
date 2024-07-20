@@ -28,7 +28,7 @@ const getMePosts = async (req, res) => {
         const data = await prisma_1.prisma.post.findMany({
             where: { userId: req.user?.id }
         });
-        res.status(200).send({ test: req.user, data });
+        res.status(200).send(data);
     }
     catch (error) {
         console.error(error);

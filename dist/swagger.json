@@ -846,6 +846,168 @@
                     }
                 }
             }
+        },
+        "/get-like/{postId}": {
+            "get": {
+                "summary": "Получить количество лайков поста",
+                "description": "Получить количество лайков для указанного поста по его ID",
+                "tags": ["Лайки"],
+                "parameters": [
+                    {
+                        "name": "postId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        },
+                        "description": "ID поста"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Количество лайков успешно получено",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "postId": {
+                                            "type": "integer"
+                                        },
+                                        "likesCount": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Идентификатор поста отсутствует"
+                    },
+                    "404": {
+                        "description": "Пост не найден"
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера"
+                    }
+                }
+            }
+        },
+        "/like": {
+            "post": {
+                "summary": "Лайк поста",
+                "description": "Лайк указанного поста",
+                "tags": ["Лайки"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "postId": {
+                                        "type": "integer",
+                                        "description": "ID поста"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Пост успешно лайкнут",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "userId": {
+                                            "type": "integer"
+                                        },
+                                        "postId": {
+                                            "type": "integer"
+                                        },
+                                        "createdAt": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "updatedAt": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректные данные запроса"
+                    },
+                    "401": {
+                        "description": "Пользователь не авторизован"
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера"
+                    }
+                }
+            }
+        },
+        "/unlike": {
+            "delete": {
+                "summary": "Удалить лайк поста",
+                "description": "Удалить лайк указанного поста",
+                "tags": ["Лайки"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "postId": {
+                                        "type": "integer",
+                                        "description": "ID поста"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Лайк успешно удален",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "userId": {
+                                            "type": "integer"
+                                        },
+                                        "postId": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Некорректные данные запроса"
+                    },
+                    "401": {
+                        "description": "Пользователь не авторизован"
+                    },
+                    "404": {
+                        "description": "Лайк не найден"
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера"
+                    }
+                }
+            }
         }
     }
 }
