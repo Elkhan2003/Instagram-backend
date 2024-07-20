@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/dist/swagger.json" beforeDir="false" afterPath="$PROJECT_DIR$/dist/swagger.json" afterDir="false" />
-    </list>
+    <list default="true" id="282161e1-f23b-4f89-9fbb-d13f08ec5ab9" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -217,6 +215,7 @@
       <workItem from="1721508010756" duration="3184000" />
       <workItem from="1721511255303" duration="1588000" />
       <workItem from="1721512857040" duration="488000" />
+      <workItem from="1721513756917" duration="305000" />
     </task>
     <servers />
   </component>
