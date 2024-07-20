@@ -38,7 +38,9 @@
             "post": {
                 "summary": "Вход",
                 "description": "Вход пользователя",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -53,7 +55,10 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": ["email", "password"]
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
                             }
                         }
                     }
@@ -93,7 +98,9 @@
             "post": {
                 "summary": "Регистрация",
                 "description": "Регистрация пользователя",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -114,7 +121,12 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": ["email", "password", "username", "photo"]
+                                "required": [
+                                    "email",
+                                    "password",
+                                    "username",
+                                    "photo"
+                                ]
                             }
                         }
                     }
@@ -160,7 +172,9 @@
             "post": {
                 "summary": "Выход",
                 "description": "Выход пользователя",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "responses": {
                     "200": {
                         "description": "Успешный выход",
@@ -187,7 +201,9 @@
             "patch": {
                 "summary": "Обновление токена",
                 "description": "Обновление токена доступа",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -199,7 +215,9 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": ["refreshToken"]
+                                "required": [
+                                    "refreshToken"
+                                ]
                             }
                         }
                     }
@@ -239,7 +257,9 @@
             "post": {
                 "summary": "Восстановление пароля",
                 "description": "Запрос на восстановление пароля. Пользователь должен ввести свой email, а URL-адрес фронтенда должен автоматически браться из текущей ссылки для перенаправления после успешного сброса. Пример запроса:\n\n```javascript\nconst data = { email: inputValue, frontEndUrl: window.location.href };\n```",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -290,7 +310,9 @@
             "patch": {
                 "summary": "Сброс пароля",
                 "description": "Сброс пароля пользователя. Пользователь должен ввести новый пароль и подтвердить его. Токен для сброса пароля передается через параметры URL. Пример запроса:\n\n```javascript\nconst [searchParams] = useSearchParams();\nconst token = searchParams.get('token');\nconst data = { token, newPassword: inputValue };\n```",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -305,7 +327,10 @@
                                         "type": "string"
                                     }
                                 },
-                                "required": ["token", "newPassword"]
+                                "required": [
+                                    "token",
+                                    "newPassword"
+                                ]
                             }
                         }
                     }
@@ -339,7 +364,9 @@
             "get": {
                 "summary": "Получить пользователя",
                 "description": "Получение информации о пользователе",
-                "tags": ["Аутентификация"],
+                "tags": [
+                    "Аутентификация"
+                ],
                 "responses": {
                     "200": {
                         "description": "Успешное получение данных пользователя",
@@ -395,7 +422,9 @@
             "post": {
                 "summary": "Загрузка файла пользователя",
                 "description": "Пример кода загрузки файла\n\n```js\nconst [selectedFile, setSelectedFile] = useState<File | null>(null);\nsetSelectedFile(event.target.files[0]);\n\nconst formData = new FormData();\nformData.append('avatar', selectedFile);\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/avatar`,\n  formData\n);\nconsole.log(response.data);\n```",
-                "tags": ["Загрузка файлов"],
+                "tags": [
+                    "Загрузка файлов"
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -446,7 +475,9 @@
             "post": {
                 "summary": "Загрузка файлов пользователя",
                 "description": "Пример кода загрузки нескольких файлов (до 10 файлов одновременно)\n\n```js\nconst [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);\nsetSelectedFiles(event.target.files);\n\nconst formData = new FormData();\nArray.from(selectedFiles).forEach(file => {\n  formData.append('files', file);\n});\n\nconst response = await axios.post(\n  `${import.meta.env.VITE_PUBLIC_API_URL}/upload/files`,\n  formData\n);\nconsole.log(response.data);\n```",
-                "tags": ["Загрузка файлов"],
+                "tags": [
+                    "Загрузка файлов"
+                ],
                 "requestBody": {
                     "content": {
                         "multipart/form-data": {
@@ -503,7 +534,9 @@
             "get": {
                 "summary": "Получение всех постов",
                 "description": "Получение списка всех постов",
-                "tags": ["Посты"],
+                "tags": [
+                    "Посты"
+                ],
                 "responses": {
                     "200": {
                         "description": "Успешное получение постов",
@@ -528,7 +561,10 @@
                                             },
                                             "mediaType": {
                                                 "type": "string",
-                                                "enum": ["PHOTO", "VIDEO"]
+                                                "enum": [
+                                                    "PHOTO",
+                                                    "VIDEO"
+                                                ]
                                             },
                                             "createdAt": {
                                                 "type": "string",
@@ -554,7 +590,9 @@
             "get": {
                 "summary": "Получение постов текущего пользователя",
                 "description": "Получение списка постов, созданных текущим авторизованным пользователем",
-                "tags": ["Посты"],
+                "tags": [
+                    "Посты"
+                ],
                 "responses": {
                     "200": {
                         "description": "Успешное получение постов текущего пользователя",
@@ -579,7 +617,10 @@
                                             },
                                             "mediaType": {
                                                 "type": "string",
-                                                "enum": ["PHOTO", "VIDEO"]
+                                                "enum": [
+                                                    "PHOTO",
+                                                    "VIDEO"
+                                                ]
                                             },
                                             "createdAt": {
                                                 "type": "string",
@@ -608,7 +649,9 @@
             "get": {
                 "summary": "Получение постов другого пользователя",
                 "description": "Получение списка постов, созданных другим пользователем по его ID",
-                "tags": ["Посты"],
+                "tags": [
+                    "Посты"
+                ],
                 "parameters": [
                     {
                         "name": "id",
@@ -642,7 +685,10 @@
                                         },
                                         "mediaType": {
                                             "type": "string",
-                                            "enum": ["PHOTO", "VIDEO"]
+                                            "enum": [
+                                                "PHOTO",
+                                                "VIDEO"
+                                            ]
                                         },
                                         "createdAt": {
                                             "type": "string",
@@ -667,7 +713,9 @@
             "post": {
                 "summary": "Создание нового поста",
                 "description": "Создание нового поста с заголовком, URL медиа и типом медиа",
-                "tags": ["Посты"],
+                "tags": [
+                    "Посты"
+                ],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -683,10 +731,17 @@
                                     },
                                     "mediaType": {
                                         "type": "string",
-                                        "enum": ["PHOTO", "VIDEO"]
+                                        "enum": [
+                                            "PHOTO",
+                                            "VIDEO"
+                                        ]
                                     }
                                 },
-                                "required": ["caption", "mediaUrl", "mediaType"]
+                                "required": [
+                                    "caption",
+                                    "mediaUrl",
+                                    "mediaType"
+                                ]
                             }
                         }
                     }
@@ -713,7 +768,10 @@
                                         },
                                         "mediaType": {
                                             "type": "string",
-                                            "enum": ["PHOTO", "VIDEO"]
+                                            "enum": [
+                                                "PHOTO",
+                                                "VIDEO"
+                                            ]
                                         },
                                         "createdAt": {
                                             "type": "string",
@@ -744,7 +802,9 @@
             "delete": {
                 "summary": "Удаление поста",
                 "description": "Удаление поста по его ID",
-                "tags": ["Посты"],
+                "tags": [
+                    "Посты"
+                ],
                 "parameters": [
                     {
                         "name": "id",
