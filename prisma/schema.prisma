@@ -22,6 +22,7 @@ model User {
   createdAt      String
   updatedAt      String
   RefreshSession RefreshSession[]
+  posts          Post[]
 }
 
 model RefreshSession {
@@ -35,7 +36,24 @@ model RefreshSession {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model Post {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  caption   String?
+  mediaUrl  String
+  mediaType MediaType
+  createdAt String
+  updatedAt String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
 enum UserRole {
   ADMIN
   USER
+}
+
+enum MediaType {
+  PHOTO
+  VIDEO
 }

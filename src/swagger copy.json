@@ -1,0 +1,37 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"version": "1.0.0",
+		"title": "Документация по API Instagram",
+		"description": "Этот API позволяет удобно взаимодействовать благодаря Swagger!\n\n⬇️ССЫЛКА НА API ДЛЯ КОНЕЧНЫХ ТОЧЕК⬇️:\n\nhttps://api-instagram.elcho.dev/api/v1",
+		"license": {
+			"name": "Copyright © 2021-2024. Все права защищены",
+			"url": "https://elcho.dev"
+		}
+	},
+	"servers": [
+		{
+			"url": "https://api-instagram.elcho.dev/api/v1",
+			"description": "Сервер для продакшена"
+		},
+		{
+			"url": "http://localhost:5000/api/v1",
+			"description": "Сервер для разработки"
+		}
+	],
+	"components": {
+		"securitySchemes": {
+			"BearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
+	},
+	"security": [
+		{
+			"BearerAuth": []
+		}
+	],
+	"paths": {}
+}
