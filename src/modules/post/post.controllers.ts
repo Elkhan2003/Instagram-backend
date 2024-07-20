@@ -81,6 +81,58 @@ const createPost = async (req: Request, res: Response) => {
 	}
 };
 
+const getLikePost = async (req: Request<{ postId: string }>, res: Response) => {
+	const { postId } = req.params;
+
+	try {
+		const likesCount = await prisma.like.count({
+			where: {
+				postId: Number(postId)
+			}
+		});
+		res.status(200).send({ postId, likesCount });
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+	}
+};
+
+const likePost = async (req: Request, res: Response) => {
+	const { postId } = req.body;
+	try {
+		const like = await prisma.like.create({
+			data: {
+				userId: req.user?.id!,
+				postId: Number(postId),
+				createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+			}
+		});
+		res.status(200).send(like);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+	}
+};
+
+const unLikePost = async (req: Request, res: Response) => {
+	const { postId } = req.body;
+	try {
+		const like = await prisma.like.delete({
+			where: {
+				userId_postId: {
+					userId: req.user?.id!,
+					postId: Number(postId)
+				}
+			}
+		});
+		res.status(200).send(like);
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+	}
+};
+
 const deletePost = async (
 	req: Request<{
 		id: string;
@@ -125,5 +177,8 @@ export default {
 	getMePosts,
 	getOtherPosts,
 	createPost,
+	getLikePost,
+	likePost,
+	unLikePost,
 	deletePost
 };

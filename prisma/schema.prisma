@@ -23,6 +23,7 @@ model User {
   updatedAt      String
   RefreshSession RefreshSession[]
   posts          Post[]
+  likes          Like[]
 }
 
 model RefreshSession {
@@ -45,7 +46,21 @@ model Post {
   createdAt String
   updatedAt String
 
+  user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  likes Like[]
+}
+
+model Like {
+  id        Int    @id @default(autoincrement())
+  userId    Int
+  postId    Int
+  createdAt String
+  updatedAt String
+
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId]) // Ensures a user can only like a post once
 }
 
 enum UserRole {

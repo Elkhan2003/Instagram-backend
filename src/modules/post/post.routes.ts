@@ -20,6 +20,21 @@ router.post(
 	authControllers.authenticateToken,
 	postControllers.createPost
 );
+router.get(
+	'/get-like/:postId',
+	authControllers.authenticateToken,
+	postControllers.getLikePost
+);
+router.post(
+	'/like',
+	authControllers.authenticateToken,
+	postControllers.likePost
+);
+router.delete(
+	'/unlike',
+	authControllers.authenticateToken,
+	postControllers.unLikePost
+);
 router.delete(
 	'/delete/:id',
 	authControllers.authenticateToken,
