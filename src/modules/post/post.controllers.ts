@@ -1,6 +1,5 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import moment from 'moment';
-import bcrypt from 'bcryptjs';
 import { prisma } from '../../plugins/prisma';
 
 const getPosts = async (req: Request, res: Response) => {
@@ -15,16 +14,18 @@ const getPosts = async (req: Request, res: Response) => {
 
 const getMePosts = async (req: Request, res: Response) => {
 	try {
-		const userData = await prisma.user.findFirst({
-			where: { email: req.user?.email }
+		// const userData = await prisma.user.findFirst({
+		// 	where: { email: req.user?.email }
+		// });
+		// if (!userData) {
+		// 	return res
+		// 		.status(404)
+		// 		.send({ message: 'Пользователь не прошел проверку подлинности' });
+		// }
+		const data = await prisma.post.findMany({
+			where: { userId: req.user?.id }
 		});
-		if (!userData) {
-			return res
-				.status(404)
-				.send({ message: 'Пользователь не прошел проверку подлинности' });
-		}
-		const data = await prisma.post.findMany({ where: { userId: userData.id } });
-		res.status(200).send(data);
+		res.status(200).send({ test: req.user, data });
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Внутренняя ошибка сервера' });

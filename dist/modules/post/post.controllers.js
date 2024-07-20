@@ -17,16 +17,18 @@ const getPosts = async (req, res) => {
 };
 const getMePosts = async (req, res) => {
     try {
-        const userData = await prisma_1.prisma.user.findFirst({
-            where: { email: req.user?.email }
+        // const userData = await prisma.user.findFirst({
+        // 	where: { email: req.user?.email }
+        // });
+        // if (!userData) {
+        // 	return res
+        // 		.status(404)
+        // 		.send({ message: 'Пользователь не прошел проверку подлинности' });
+        // }
+        const data = await prisma_1.prisma.post.findMany({
+            where: { userId: req.user?.id }
         });
-        if (!userData) {
-            return res
-                .status(404)
-                .send({ message: 'Пользователь не прошел проверку подлинности' });
-        }
-        const data = await prisma_1.prisma.post.findMany({ where: { userId: userData.id } });
-        res.status(200).send(data);
+        res.status(200).send({ test: req.user, data });
     }
     catch (error) {
         console.error(error);
