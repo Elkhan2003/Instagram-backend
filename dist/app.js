@@ -39,9 +39,7 @@ const buildServer = () => {
     // swagger
     server.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocumentation, {
         swaggerOptions: {
-            swaggerOptions: {
-                persistAuthorization: true
-            }
+            persistAuthorization: true
         }
     }));
     // Middleware

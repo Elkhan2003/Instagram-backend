@@ -22,9 +22,7 @@ export const buildServer = () => {
 		swaggerUi.serve,
 		swaggerUi.setup(swaggerDocumentation, {
 			swaggerOptions: {
-				swaggerOptions: {
-					persistAuthorization: true
-				}
+				persistAuthorization: true
 			}
 		})
 	);
