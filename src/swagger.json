@@ -791,7 +791,7 @@
 			"get": {
 				"summary": "Получить количество лайков поста",
 				"description": "Получить количество лайков для указанного поста по его ID",
-				"tags": ["Посты - Лайки"],
+				"tags": ["Посты => Лайк"],
 				"parameters": [
 					{
 						"name": "postId",
@@ -866,7 +866,7 @@
 			"post": {
 				"summary": "Лайк поста",
 				"description": "Лайк указанного поста",
-				"tags": ["Посты - Лайки"],
+				"tags": ["Посты => Лайк"],
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -926,7 +926,7 @@
 			"delete": {
 				"summary": "Удалить лайк поста",
 				"description": "Удалить лайк указанного поста",
-				"tags": ["Посты - Лайки"],
+				"tags": ["Посты => Лайк"],
 				"requestBody": {
 					"required": true,
 					"content": {
