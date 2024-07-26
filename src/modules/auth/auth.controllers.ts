@@ -217,18 +217,10 @@ const loginUser = async (req: Request, res: Response) => {
 };
 
 const logoutUser = async (req: Request, res: Response) => {
-	// const { refreshToken } = req.body;
 	try {
-		// const existingRefreshToken = await prisma.refreshSession.deleteMany({
-		// 	where: { refreshToken }
-		// });
-		//
-		// if (!existingRefreshToken) {
-		// 	return res
-		// 		.status(409)
-		// 		.send({ message: 'Недействительный RefreshToken Token' });
-		// }
-
+		await prisma.refreshSession.deleteMany({
+			where: { userId: req.user?.id }
+		});
 		res.status(200).send({ message: 'Пользователь успешно вышел из системы' });
 	} catch (error) {
 		console.error(error);
@@ -239,31 +231,25 @@ const logoutUser = async (req: Request, res: Response) => {
 const refreshToken = async (req: Request, res: Response) => {
 	const { refreshToken: tokenFromBody } = req.body;
 	const { fingerprint } = req;
-
 	if (!tokenFromBody) {
 		return res.status(401).send({ message: 'Refresh token не предоставлен' });
 	}
-
 	try {
 		const payload = jwt.verify(
 			tokenFromBody,
 			process.env.REFRESH_TOKEN_SECRET!
 		) as jwt.JwtPayload;
-
 		const existingSession = await prisma.refreshSession.findFirst({
 			where: { refreshToken: tokenFromBody }
 		});
-
 		if (!existingSession) {
 			return res
 				.status(401)
 				.send({ message: 'Недействительный refresh token' });
 		}
-
 		if (existingSession.fingerPrint !== fingerprint?.hash) {
 			return res.status(401).send({ message: 'Недействительный fingerprint' });
 		}
-
 		const newPayload = {
 			id: payload.id,
 			email: payload.email,
@@ -275,7 +261,6 @@ const refreshToken = async (req: Request, res: Response) => {
 			accessTokenExpiration,
 			refreshToken: newRefreshToken
 		} = generateTokens(newPayload);
-
 		await prisma.refreshSession.update({
 			where: { id: existingSession.id },
 			data: {
@@ -283,7 +268,6 @@ const refreshToken = async (req: Request, res: Response) => {
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
-
 		res.status(200).send({
 			accessToken,
 			accessTokenExpiration,

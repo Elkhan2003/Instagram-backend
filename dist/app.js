@@ -30,12 +30,16 @@ exports.buildServer = void 0;
 const dotenv_1 = require("dotenv");
 (0, dotenv_1.config)();
 const express_1 = __importDefault(require("express"));
-const index_1 = __importDefault(require("./routes/index"));
+const cors_1 = __importDefault(require("cors"));
 const express_fingerprint_1 = __importDefault(require("express-fingerprint"));
 const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const index_1 = __importDefault(require("./routes/index"));
 const swaggerDocumentation = __importStar(require("./swagger.json"));
 const buildServer = () => {
     const server = (0, express_1.default)();
+    server.use((0, cors_1.default)({
+        origin: '*'
+    }));
     // swagger
     server.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocumentation, {
         swaggerOptions: {
