@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { supabase } from '../../plugins/supabase';
-import moment from 'moment';
+import moment from 'moment/moment';
 
 const sanitizeFilename = (filename: string) => {
 	return filename
