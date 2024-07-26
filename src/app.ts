@@ -20,7 +20,13 @@ export const buildServer = () => {
 	server.use(
 		'/api-docs',
 		swaggerUi.serve,
-		swaggerUi.setup(swaggerDocumentation)
+		swaggerUi.setup(swaggerDocumentation, {
+			swaggerOptions: {
+				swaggerOptions: {
+					persistAuthorization: true
+				}
+			}
+		})
 	);
 
 	// Middleware

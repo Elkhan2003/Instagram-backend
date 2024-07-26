@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import moment from 'moment/moment';
+import moment from 'moment';
 import { prisma } from '../../plugins/prisma';
 
 const getPosts = async (req: Request, res: Response) => {

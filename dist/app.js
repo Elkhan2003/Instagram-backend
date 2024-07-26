@@ -37,7 +37,13 @@ const swaggerDocumentation = __importStar(require("./swagger.json"));
 const buildServer = () => {
     const server = (0, express_1.default)();
     // swagger
-    server.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocumentation));
+    server.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocumentation, {
+        swaggerOptions: {
+            swaggerOptions: {
+                persistAuthorization: true
+            }
+        }
+    }));
     // Middleware
     server.use(express_1.default.urlencoded({ extended: true }));
     server.use(express_1.default.json());

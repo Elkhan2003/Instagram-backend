@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const moment_1 = __importDefault(require("moment/moment"));
+const moment_1 = __importDefault(require("moment"));
 const prisma_1 = require("../../plugins/prisma");
 const getPosts = async (req, res) => {
     try {
