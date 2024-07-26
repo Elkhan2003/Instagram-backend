@@ -17,14 +17,6 @@ const getPosts = async (req, res) => {
 };
 const getMePosts = async (req, res) => {
     try {
-        // const userData = await prisma.user.findFirst({
-        // 	where: { email: req.user?.email }
-        // });
-        // if (!userData) {
-        // 	return res
-        // 		.status(404)
-        // 		.send({ message: 'Пользователь не прошел проверку подлинности' });
-        // }
         const data = await prisma_1.prisma.post.findMany({
             where: { userId: req.user?.id }
         });
@@ -86,28 +78,20 @@ const createPost = async (req, res) => {
 };
 const getLikePost = async (req, res) => {
     const { postId } = req.params;
+    const postIdNumber = Number(postId);
     try {
-        const postExists = await prisma_1.prisma.post.findUnique({
-            where: {
-                id: Number(postId)
-            }
-        });
+        const [postExists, likesCount, userLike] = await Promise.all([
+            prisma_1.prisma.post.findUnique({ where: { id: postIdNumber } }),
+            prisma_1.prisma.like.count({ where: { postId: postIdNumber } }),
+            prisma_1.prisma.like.findFirst({
+                where: { userId: req.user?.id, postId: postIdNumber }
+            })
+        ]);
         if (!postExists) {
             return res.status(404).send({ message: 'Пост не найден' });
         }
-        const likesCount = await prisma_1.prisma.like.count({
-            where: {
-                postId: Number(postId)
-            }
-        });
-        const userLike = await prisma_1.prisma.like.findFirst({
-            where: {
-                userId: req.user?.id,
-                postId: Number(postId)
-            }
-        });
         const isLike = !!userLike;
-        res.status(200).send({ postId, likesCount, isLike });
+        res.status(200).send({ postId: postIdNumber, likesCount, isLike });
     }
     catch (error) {
         console.error('Ошибка при обработке запроса:', error);
@@ -116,11 +100,12 @@ const getLikePost = async (req, res) => {
 };
 const likePost = async (req, res) => {
     const { postId } = req.body;
+    const postIdNumber = Number(postId);
     try {
         const existingLike = await prisma_1.prisma.like.findFirst({
             where: {
                 userId: req.user?.id,
-                postId: Number(postId)
+                postId: postIdNumber
             }
         });
         if (existingLike) {
@@ -128,16 +113,16 @@ const likePost = async (req, res) => {
                 .status(400)
                 .send({ message: 'Пользователь уже поставил лайк этому посту' });
         }
-        const like = await prisma_1.prisma.like.create({
-            data: {
-                userId: req.user?.id,
-                postId: Number(postId),
-                createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
-                updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
-            }
+        const like = {
+            userId: req.user?.id,
+            postId: postIdNumber,
+            createdAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+            updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+        };
+        res.status(200).send(like);
+        await prisma_1.prisma.like.create({
+            data: like
         });
-        const { id, ...responseLike } = like;
-        res.status(200).send(responseLike);
     }
     catch (error) {
         console.error(error);
@@ -146,26 +131,27 @@ const likePost = async (req, res) => {
 };
 const unLikePost = async (req, res) => {
     const { postId } = req.body;
+    const postIdNumber = Number(postId);
     try {
         const existingLike = await prisma_1.prisma.like.findFirst({
             where: {
                 userId: req.user?.id,
-                postId: Number(postId)
+                postId: postIdNumber
             }
         });
         if (!existingLike) {
             return res.status(404).send({ message: 'Лайк не найден' });
         }
-        const like = await prisma_1.prisma.like.delete({
+        const like = {
+            userId: req.user?.id,
+            postId: postIdNumber
+        };
+        res.status(200).send(like);
+        await prisma_1.prisma.like.delete({
             where: {
-                userId_postId: {
-                    userId: req.user?.id,
-                    postId: Number(postId)
-                }
+                userId_postId: like
             }
         });
-        const { id, createdAt, updatedAt, ...responseLike } = like;
-        res.status(200).send(responseLike);
     }
     catch (error) {
         console.error(error);
