@@ -4,18 +4,12 @@ import express from 'express';
 import routes from './routes/index';
 import Fingerprint from 'express-fingerprint';
 import swaggerUi from 'swagger-ui-express';
+import { IUser } from './types';
 import * as swaggerDocumentation from './swagger.json';
-
-interface usersType {
-	id: number;
-	email: string;
-	username: string;
-	photo: string;
-}
 
 declare global {
 	namespace Express {
-		interface User extends usersType {}
+		interface User extends IUser {}
 	}
 }
 

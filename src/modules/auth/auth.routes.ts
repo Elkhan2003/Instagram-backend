@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import authenticateToken from '../../middleware/authenticateToken';
 import authControllers from './auth.controllers';
 
 const router = Router();
@@ -9,6 +10,6 @@ router.post('/logout', authControllers.logoutUser);
 router.patch('/refresh', authControllers.refreshToken);
 router.post('/forgot', authControllers.forgotPassword);
 router.patch('/reset-password', authControllers.resetPassword);
-router.get('/user', authControllers.authenticateToken, authControllers.getUser);
+router.get('/user', authenticateToken, authControllers.getUser);
 
 export default router;

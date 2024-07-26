@@ -44,7 +44,7 @@ const registerUser = async (req: Request, res: Response) => {
 		// Валидация длины полей
 		if (
 			email.length < 2 ||
-			password.length < 2 ||
+			password.length < 8 ||
 			username.length < 2 ||
 			photo.length < 2
 		) {
@@ -52,7 +52,7 @@ const registerUser = async (req: Request, res: Response) => {
 				message: 'Все поля должны содержать минимум 2 символа',
 				hint: {
 					email: 'минимум 2 символа',
-					password: 'минимум 2 символа',
+					password: 'минимум 8 символа',
 					username: 'минимум 2 символа',
 					photo: 'минимум 2 символа'
 				}
@@ -507,23 +507,6 @@ const getUser = async (req: Request, res: Response) => {
 	res.status(200).send({ profile: userData });
 };
 
-const authenticateToken = (req: Request, res: Response, next: NextFunction) => {
-	const authHeader = req.headers.authorization;
-	if (!authHeader) {
-		return res.status(401).json({ message: 'Токен не предоставлен' });
-	}
-
-	const accessToken = authHeader.split(' ')[1];
-	try {
-		const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET!);
-		// @ts-ignore
-		req.user = decoded;
-		next();
-	} catch (err) {
-		res.status(403).json({ message: 'Invalid access token' });
-	}
-};
-
 export default {
 	loginUser,
 	registerUser,
@@ -531,6 +514,5 @@ export default {
 	refreshToken,
 	forgotPassword,
 	resetPassword,
-	getUser,
-	authenticateToken
+	getUser
 };
