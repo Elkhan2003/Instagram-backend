@@ -7,7 +7,9 @@ const moment_1 = __importDefault(require("moment"));
 const prisma_1 = require("../../plugins/prisma");
 const getPosts = async (req, res) => {
     try {
-        const data = await prisma_1.prisma.post.findMany();
+        const data = await prisma_1.prisma.post.findMany({
+            orderBy: { updatedAt: 'desc' }
+        });
         res.status(200).send(data);
     }
     catch (error) {
@@ -18,7 +20,8 @@ const getPosts = async (req, res) => {
 const getMePosts = async (req, res) => {
     try {
         const data = await prisma_1.prisma.post.findMany({
-            where: { userId: req.user?.id }
+            where: { userId: req.user?.id },
+            orderBy: { updatedAt: 'desc' }
         });
         res.status(200).send(data);
     }
@@ -30,7 +33,10 @@ const getMePosts = async (req, res) => {
 const getOtherPosts = async (req, res) => {
     const { id } = req.params;
     try {
-        const data = await prisma_1.prisma.post.findMany({ where: { userId: Number(id) } });
+        const data = await prisma_1.prisma.post.findMany({
+            where: { userId: Number(id) },
+            orderBy: { updatedAt: 'desc' }
+        });
         res.status(200).send(data);
     }
     catch (error) {
@@ -76,22 +82,71 @@ const createPost = async (req, res) => {
         res.status(500).send({ message: 'Внутренняя ошибка сервера' });
     }
 };
+// const getLikePost = async (req: Request<{ postId: string }>, res: Response) => {
+// 	const { postId } = req.params;
+// 	const postIdNumber = Number(postId);
+// 	try {
+// 		const [postExists, likesCount, userLike, likedUsers] = await Promise.all([
+// 			prisma.post.findUnique({ where: { id: postIdNumber } }),
+// 			prisma.like.count({ where: { postId: postIdNumber } }),
+// 			prisma.like.findFirst({
+// 				where: { userId: req.user?.id, postId: postIdNumber }
+// 			}),
+// 			prisma.user.findMany({
+// 				where: { likes: { some: { postId: postIdNumber } } },
+// 				select: { username: true, photo: true },
+// 				orderBy: { createdAt: 'desc' }
+// 			})
+// 		]);
+// 		if (!postExists) {
+// 			return res.status(404).send({ message: 'Пост не найден' });
+// 		}
+// 		const isLike = !!userLike;
+// 		res.status(200).send({
+// 			postId: postIdNumber,
+// 			likesCount,
+// 			isLike,
+// 			likedUsers: likedUsers.map((user) => ({
+// 				username: user.username,
+// 				photo: user.photo
+// 			}))
+// 		});
+// 	} catch (error) {
+// 		console.error('Ошибка при обработке запроса:', error);
+// 		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
+// 	}
+// };
 const getLikePost = async (req, res) => {
     const { postId } = req.params;
     const postIdNumber = Number(postId);
     try {
-        const [postExists, likesCount, userLike] = await Promise.all([
+        const [postExists, likesCount, userLike, likesWithUsers] = await Promise.all([
             prisma_1.prisma.post.findUnique({ where: { id: postIdNumber } }),
             prisma_1.prisma.like.count({ where: { postId: postIdNumber } }),
             prisma_1.prisma.like.findFirst({
                 where: { userId: req.user?.id, postId: postIdNumber }
+            }),
+            prisma_1.prisma.like.findMany({
+                where: { postId: postIdNumber },
+                include: { user: { select: { username: true, photo: true } } },
+                orderBy: { createdAt: 'desc' }
             })
         ]);
         if (!postExists) {
             return res.status(404).send({ message: 'Пост не найден' });
         }
         const isLike = !!userLike;
-        res.status(200).send({ postId: postIdNumber, likesCount, isLike });
+        const likedUsers = likesWithUsers.map((like) => ({
+            username: like.user.username,
+            photo: like.user.photo,
+            likedAt: like.createdAt
+        }));
+        res.status(200).send({
+            postId: postIdNumber,
+            likesCount,
+            isLike,
+            likedUsers
+        });
     }
     catch (error) {
         console.error('Ошибка при обработке запроса:', error);

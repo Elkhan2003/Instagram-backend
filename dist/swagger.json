@@ -791,7 +791,7 @@
             "get": {
                 "summary": "Получить количество лайков поста",
                 "description": "Получить количество лайков для указанного поста по его ID",
-                "tags": ["Лайки"],
+                "tags": ["Посты - Лайки"],
                 "parameters": [
                     {
                         "name": "postId",
@@ -812,13 +812,38 @@
                                     "type": "object",
                                     "properties": {
                                         "postId": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "description": "ID поста"
                                         },
                                         "likesCount": {
-                                            "type": "integer"
+                                            "type": "integer",
+                                            "description": "Количество лайков"
                                         },
                                         "isLike": {
-                                            "type": "boolean"
+                                            "type": "boolean",
+                                            "description": "Пользователь лайкнул пост или нет"
+                                        },
+                                        "likedUsers": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "username": {
+                                                        "type": "string",
+                                                        "description": "Имя пользователя, который лайкнул пост"
+                                                    },
+                                                    "photo": {
+                                                        "type": "string",
+                                                        "description": "URL фотографии пользователя, который лайкнул пост"
+                                                    },
+                                                    "likedAt": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "description": "Дата и время, когда пользователь лайкнул пост"
+                                                    }
+                                                }
+                                            },
+                                            "description": "Список пользователей, которые лайкнули пост"
                                         }
                                     }
                                 }
@@ -841,7 +866,7 @@
             "post": {
                 "summary": "Лайк поста",
                 "description": "Лайк указанного поста",
-                "tags": ["Лайки"],
+                "tags": ["Посты - Лайки"],
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -901,7 +926,7 @@
             "delete": {
                 "summary": "Удалить лайк поста",
                 "description": "Удалить лайк указанного поста",
-                "tags": ["Лайки"],
+                "tags": ["Посты - Лайки"],
                 "requestBody": {
                     "required": true,
                     "content": {
