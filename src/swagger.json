@@ -666,7 +666,7 @@
 		"/post/create": {
 			"post": {
 				"summary": "Создание нового поста",
-				"description": "Создание нового поста с заголовком, URL медиа и типом медиа",
+				"description": "Создание нового поста с заголовком, URL медиа и типом медиа (PHOTO || VIDEO)",
 				"tags": ["Посты"],
 				"requestBody": {
 					"required": true,

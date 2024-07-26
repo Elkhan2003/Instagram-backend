@@ -14,14 +14,6 @@ const getPosts = async (req: Request, res: Response) => {
 
 const getMePosts = async (req: Request, res: Response) => {
 	try {
-		// const userData = await prisma.user.findFirst({
-		// 	where: { email: req.user?.email }
-		// });
-		// if (!userData) {
-		// 	return res
-		// 		.status(404)
-		// 		.send({ message: 'Пользователь не прошел проверку подлинности' });
-		// }
 		const data = await prisma.post.findMany({
 			where: { userId: req.user?.id }
 		});
@@ -83,28 +75,20 @@ const createPost = async (req: Request, res: Response) => {
 
 const getLikePost = async (req: Request<{ postId: string }>, res: Response) => {
 	const { postId } = req.params;
+	const postIdNumber = Number(postId);
 	try {
-		const postExists = await prisma.post.findUnique({
-			where: {
-				id: Number(postId)
-			}
-		});
+		const [postExists, likesCount, userLike] = await Promise.all([
+			prisma.post.findUnique({ where: { id: postIdNumber } }),
+			prisma.like.count({ where: { postId: postIdNumber } }),
+			prisma.like.findFirst({
+				where: { userId: req.user?.id, postId: postIdNumber }
+			})
+		]);
 		if (!postExists) {
 			return res.status(404).send({ message: 'Пост не найден' });
 		}
-		const likesCount = await prisma.like.count({
-			where: {
-				postId: Number(postId)
-			}
-		});
-		const userLike = await prisma.like.findFirst({
-			where: {
-				userId: req.user?.id,
-				postId: Number(postId)
-			}
-		});
 		const isLike = !!userLike;
-		res.status(200).send({ postId, likesCount, isLike });
+		res.status(200).send({ postId: postIdNumber, likesCount, isLike });
 	} catch (error) {
 		console.error('Ошибка при обработке запроса:', error);
 		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
@@ -113,11 +97,12 @@ const getLikePost = async (req: Request<{ postId: string }>, res: Response) => {
 
 const likePost = async (req: Request, res: Response) => {
 	const { postId } = req.body;
+	const postIdNumber = Number(postId);
 	try {
 		const existingLike = await prisma.like.findFirst({
 			where: {
 				userId: req.user?.id,
-				postId: Number(postId)
+				postId: postIdNumber
 			}
 		});
 		if (existingLike) {
@@ -125,16 +110,16 @@ const likePost = async (req: Request, res: Response) => {
 				.status(400)
 				.send({ message: 'Пользователь уже поставил лайк этому посту' });
 		}
-		const like = await prisma.like.create({
-			data: {
-				userId: req.user?.id!,
-				postId: Number(postId),
-				createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
-				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
-			}
+		const like = {
+			userId: req.user?.id!,
+			postId: postIdNumber,
+			createdAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z'),
+			updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
+		};
+		res.status(200).send(like);
+		await prisma.like.create({
+			data: like
 		});
-		const { id, ...responseLike } = like;
-		res.status(200).send(responseLike);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
@@ -143,26 +128,27 @@ const likePost = async (req: Request, res: Response) => {
 
 const unLikePost = async (req: Request, res: Response) => {
 	const { postId } = req.body;
+	const postIdNumber = Number(postId);
 	try {
 		const existingLike = await prisma.like.findFirst({
 			where: {
 				userId: req.user?.id,
-				postId: Number(postId)
+				postId: postIdNumber
 			}
 		});
 		if (!existingLike) {
 			return res.status(404).send({ message: 'Лайк не найден' });
 		}
-		const like = await prisma.like.delete({
+		const like = {
+			userId: req.user?.id!,
+			postId: postIdNumber
+		};
+		res.status(200).send(like);
+		await prisma.like.delete({
 			where: {
-				userId_postId: {
-					userId: req.user?.id!,
-					postId: Number(postId)
-				}
+				userId_postId: like
 			}
 		});
-		const { id, createdAt, updatedAt, ...responseLike } = like;
-		res.status(200).send(responseLike);
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Внутренняя ошибка сервера' });
