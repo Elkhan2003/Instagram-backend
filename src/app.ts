@@ -1,9 +1,10 @@
 import { config } from 'dotenv';
 config();
 import express from 'express';
-import routes from './routes/index';
+import cors from 'cors';
 import Fingerprint from 'express-fingerprint';
 import swaggerUi from 'swagger-ui-express';
+import routes from './routes/index';
 import { IUser } from './types';
 import * as swaggerDocumentation from './swagger.json';
 
@@ -15,6 +16,11 @@ declare global {
 
 export const buildServer = () => {
 	const server = express();
+	server.use(
+		cors({
+			origin: '*'
+		})
+	);
 
 	// swagger
 	server.use(
