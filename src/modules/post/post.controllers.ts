@@ -143,7 +143,7 @@ const getLikePost = async (req: Request<{ postId: string }>, res: Response) => {
 			likedAt: like.createdAt
 		}));
 		res.status(200).send({
-			postId: postIdNumber,
+			postId: postIdNumber,`x
 			likesCount,
 			isLike,
 			likedUsers
