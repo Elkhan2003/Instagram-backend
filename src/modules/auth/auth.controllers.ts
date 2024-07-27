@@ -21,67 +21,13 @@ const registerUser = async (req: Request, res: Response) => {
 	try {
 		const { email, password, username, photo } = req.body;
 		const { fingerprint } = req;
-
-		// Валидация структуры запроса и полей
-		if (
-			typeof req.body !== 'object' ||
-			!email ||
-			!password ||
-			!username ||
-			!photo
-		) {
-			return res.status(400).send({
-				message: 'Все поля обязательны для заполнения',
-				hint: {
-					email: 'string',
-					password: 'string',
-					username: 'string',
-					photo: 'string'
-				}
-			});
-		}
-
-		// Валидация длины полей
-		if (
-			email.length < 2 ||
-			password.length < 8 ||
-			username.length < 2 ||
-			photo.length < 2
-		) {
-			return res.status(400).send({
-				message: 'Все поля должны содержать минимум 2 символа',
-				hint: {
-					email: 'минимум 2 символа',
-					password: 'минимум 8 символа',
-					username: 'минимум 2 символа',
-					photo: 'минимум 2 символа'
-				}
-			});
-		}
-
-		// Валидация формата email
-		const emailRegex = /^\S+@\S+\.\S+$/i;
-		if (!emailRegex.test(email)) {
-			return res.status(400).send({
-				message: 'Неверный формат email',
-				hint: {
-					email: 'Введите корректный email адрес'
-				}
-			});
-		}
-
-		// Проверка на существование пользователя с таким email
 		const existingUser = await prisma.user.findUnique({ where: { email } });
 		if (existingUser) {
 			return res
 				.status(409)
 				.send({ message: 'Пользователь уже зарегистрирован' });
 		}
-
-		// Хэширование пароля
 		const hashedPassword = await bcrypt.hash(password, 10);
-
-		// Создание нового пользователя
 		const { id } = await prisma.user.create({
 			data: {
 				email,
@@ -92,13 +38,9 @@ const registerUser = async (req: Request, res: Response) => {
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
-
-		// Генерация токенов
 		const payload = { id, email, username, photo };
 		const { accessToken, accessTokenExpiration, refreshToken } =
 			generateTokens(payload);
-
-		// Создание новой сессии
 		await prisma.refreshSession.create({
 			data: {
 				userId: id,
@@ -108,8 +50,6 @@ const registerUser = async (req: Request, res: Response) => {
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
-
-		// Возвращение успешного ответа
 		res.status(201).send({
 			message: 'Пользователь успешно зарегистрировался',
 			accessToken,
@@ -126,54 +66,17 @@ const loginUser = async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body;
 		const { fingerprint } = req;
-
-		// Валидация структуры запроса и полей
-		if (
-			typeof req.body !== 'object' ||
-			!email ||
-			!password ||
-			typeof email !== 'string' ||
-			typeof password !== 'string'
-		) {
-			return res.status(400).send({
-				message:
-					'Неправильный формат запроса или все поля обязательны для заполнения',
-				hint: {
-					email: 'string',
-					password: 'string'
-				}
-			});
-		}
-
-		// Валидация формата email
-		const emailRegex = /^\S+@\S+\.\S+$/i;
-		if (!emailRegex.test(email)) {
-			return res.status(400).send({
-				message: 'Неверный формат email',
-				hint: {
-					email: 'Введите корректный email адрес'
-				}
-			});
-		}
-
-		// Поиск пользователя в базе данных
 		const user = await prisma.user.findUnique({ where: { email } });
 		if (!user) {
 			return res.status(400).json({ message: 'Неверный логин или пароль' });
 		}
-
-		// Проверка пароля
 		const isPasswordValid = await bcrypt.compare(password, user.password!);
 		if (!isPasswordValid) {
 			return res.status(400).json({ message: 'Неверный логин или пароль' });
 		}
-
-		// Поиск существующей сессии
 		const existingSession = await prisma.refreshSession.findFirst({
 			where: { userId: user.id, fingerPrint: fingerprint?.hash }
 		});
-
-		// Генерация токенов
 		const payload = {
 			id: user.id,
 			email,
@@ -182,8 +85,6 @@ const loginUser = async (req: Request, res: Response) => {
 		};
 		const { accessToken, accessTokenExpiration, refreshToken } =
 			generateTokens(payload);
-
-		// Обновление или создание новой сессии
 		if (existingSession) {
 			await prisma.refreshSession.update({
 				where: { id: existingSession.id },
@@ -203,8 +104,6 @@ const loginUser = async (req: Request, res: Response) => {
 				}
 			});
 		}
-
-		// Возвращаем токены клиенту
 		res.status(200).send({
 			accessToken,
 			accessTokenExpiration,
@@ -231,9 +130,6 @@ const logoutUser = async (req: Request, res: Response) => {
 const refreshToken = async (req: Request, res: Response) => {
 	const { refreshToken: tokenFromBody } = req.body;
 	const { fingerprint } = req;
-	if (!tokenFromBody) {
-		return res.status(401).send({ message: 'Refresh token не предоставлен' });
-	}
 	try {
 		const payload = jwt.verify(
 			tokenFromBody,
@@ -281,55 +177,13 @@ const refreshToken = async (req: Request, res: Response) => {
 
 const forgotPassword = async (req: Request, res: Response) => {
 	const { frontEndUrl, email } = req.body;
-
-	if (!email) {
-		return res.status(400).send({
-			message: 'Все поля обязательны для заполнения',
-			hint: {
-				email: 'string'
-			}
-		});
-	}
-
-	const emailRegex = /^\S+@\S+\.\S+$/i;
-	if (!emailRegex.test(email)) {
-		return res.status(400).send({
-			message: 'Неверный формат email',
-			hint: {
-				email: 'Введите корректный email адрес'
-			}
-		});
-	}
-
-	if (!frontEndUrl) {
-		return res.status(400).send({
-			message: 'URL фронтенда обязателен',
-			hint: {
-				frontEndUrl: 'string'
-			}
-		});
-	}
-
-	// Регулярное выражение для проверки допустимого домена
 	const domainRegex = /^https?:\/\/[^\/]+/;
 	const matchedDomain = frontEndUrl.match(domainRegex);
-
-	if (!matchedDomain) {
-		return res.status(400).send({
-			message: 'Недопустимый домен',
-			hint: {
-				frontEndUrl: 'Введите корректный URL с допустимым доменом'
-			}
-		});
-	}
-
 	try {
 		const user = await prisma.user.findUnique({ where: { email } });
-
 		if (!user) {
 			return res.status(404).send({ message: 'Пользователь не найден' });
 		}
-
 		const resetToken: string = jwt.sign(
 			{ id: user.id },
 			process.env.RESET_PASSWORD_TOKEN_SECRET!,
@@ -337,9 +191,7 @@ const forgotPassword = async (req: Request, res: Response) => {
 				expiresIn: '15m'
 			}
 		);
-
 		await redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
-
 		const resetPasswordHtml = `
             <div style="font-family: Arial, sans-serif; color: #333;">
                 <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
@@ -389,7 +241,6 @@ Need help? Contact us at boss.armsport@gmail.com
 			text: resetPasswordText,
 			html: resetPasswordHtml
 		};
-
 		await mailer.sendMail(mailOptions);
 		res.status(200).send({ message: 'Password reset email sent successfully' });
 	} catch (error) {
@@ -401,35 +252,12 @@ Need help? Contact us at boss.armsport@gmail.com
 const resetPassword = async (req: Request, res: Response) => {
 	try {
 		const { token, newPassword } = req.body;
-
-		// Валидация структуры запроса и полей
-		if (typeof req.body !== 'object' || !token || !newPassword) {
-			return res.status(400).send({
-				message: 'Все поля обязательны для заполнения',
-				hint: {
-					token: 'string',
-					newPassword: 'string'
-				}
-			});
-		}
-
-		// Валидация длины пароля
-		if (newPassword.length < 2) {
-			return res.status(400).send({
-				message: 'Пароль должен содержать минимум 2 символа',
-				hint: {
-					newPassword: 'минимум 2 символа'
-				}
-			});
-		}
-
 		// Проверка токена
 		const decoded = jwt.verify(
 			token,
 			process.env.RESET_PASSWORD_TOKEN_SECRET!
 		) as jwt.JwtPayload;
 		const { id } = decoded;
-
 		// Проверка существования токена в Redis
 		const storedToken = await redis.getData(`resetToken:${id}`);
 		if (!storedToken || storedToken !== token) {
@@ -437,11 +265,7 @@ const resetPassword = async (req: Request, res: Response) => {
 				.status(400)
 				.send({ message: 'Неверный или просроченный токен сброса пароля' });
 		}
-
-		// Хэширование нового пароля
 		const hashedPassword = await bcrypt.hash(newPassword, 10);
-
-		// Обновление пароля пользователя в базе данных
 		await prisma.user.update({
 			where: { id },
 			data: {
@@ -449,11 +273,7 @@ const resetPassword = async (req: Request, res: Response) => {
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
-
-		// Удаление токена сброса из Redis
 		await redis.deleteData(`resetToken:${id}`);
-
-		// Возвращение успешного ответа
 		res.status(200).send({ message: 'Пароль успешно сброшен' });
 	} catch (error) {
 		console.error('Error resetting password:', error);
@@ -470,13 +290,11 @@ const getUser = async (req: Request, res: Response) => {
 	const data = await prisma.user.findUnique({
 		where: { email: req.user?.email }
 	});
-
 	if (!data) {
 		return res
 			.status(404)
 			.json({ message: 'Пользователь не прошел проверку подлинности' });
 	}
-
 	const userData = {
 		id: data.id,
 		username: data.username,
@@ -487,7 +305,6 @@ const getUser = async (req: Request, res: Response) => {
 		createdAt: data.createdAt,
 		updatedAt: data.updatedAt
 	};
-
 	res.status(200).send({ profile: userData });
 };
 
