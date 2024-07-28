@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 
 export class SignUpDto {
-	@IsEmail()
+	// @IsEmail()
 	@IsString()
 	@IsNotEmpty()
 	readonly email: string;
@@ -21,7 +21,7 @@ export class SignUpDto {
 	@IsNotEmpty()
 	readonly username: string;
 
-	@IsUrl()
+	// @IsUrl()
 	@IsString()
 	@IsNotEmpty()
 	readonly photo: string;
