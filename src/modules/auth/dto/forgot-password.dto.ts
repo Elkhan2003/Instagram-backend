@@ -12,7 +12,6 @@ export class ForgotPasswordDto {
 	@IsNotEmpty()
 	readonly email: string;
 
-	@IsUrl()
 	@IsString()
 	@IsNotEmpty()
 	readonly frontEndUrl: string;
