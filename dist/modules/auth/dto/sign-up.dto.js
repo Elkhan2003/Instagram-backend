@@ -9,15 +9,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpDto = void 0;
 const class_validator_1 = require("class-validator");
 class SignUpDto {
-    // @IsEmail()
     email;
     password;
     username;
-    // @IsUrl()
     photo;
 }
 exports.SignUpDto = SignUpDto;
 __decorate([
+    (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)()
 ], SignUpDto.prototype, "email", void 0);
@@ -30,6 +29,10 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)()
 ], SignUpDto.prototype, "username", void 0);
 __decorate([
+    (0, class_validator_1.Matches)(/^https?:\/\/[^\/]+/, {
+        message: 'Invalid token format'
+    }),
+    (0, class_validator_1.IsUrl)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)()
 ], SignUpDto.prototype, "photo", void 0);

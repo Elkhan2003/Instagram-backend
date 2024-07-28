@@ -3,12 +3,12 @@ import {
 	IsNotEmpty,
 	IsEmail,
 	MinLength,
-	IsOptional,
-	IsUrl
+	IsUrl,
+	Matches
 } from 'class-validator';
 
 export class SignUpDto {
-	// @IsEmail()
+	@IsEmail()
 	@IsString()
 	@IsNotEmpty()
 	readonly email: string;
@@ -21,7 +21,9 @@ export class SignUpDto {
 	@IsNotEmpty()
 	readonly username: string;
 
-	// @IsUrl()
+	@Matches(/^https?:\/\/[^\/]+/, {
+		message: 'photo must be a URL address'
+	})
 	@IsString()
 	@IsNotEmpty()
 	readonly photo: string;

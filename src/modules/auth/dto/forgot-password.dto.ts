@@ -1,10 +1,4 @@
-import {
-	IsString,
-	IsNotEmpty,
-	IsEmail,
-	MinLength,
-	IsUrl
-} from 'class-validator';
+import { IsString, IsNotEmpty, IsEmail, IsUrl, Matches } from 'class-validator';
 
 export class ForgotPasswordDto {
 	@IsEmail()
@@ -12,6 +6,9 @@ export class ForgotPasswordDto {
 	@IsNotEmpty()
 	readonly email: string;
 
+	@Matches(/^https?:\/\/[^\/]+/, {
+		message: 'frontEndUrl must be a URL address'
+	})
 	@IsString()
 	@IsNotEmpty()
 	readonly frontEndUrl: string;

@@ -9,16 +9,16 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignInDto = void 0;
 const class_validator_1 = require("class-validator");
 class SignInDto {
-    // @IsEmail()
     email;
     password;
 }
 exports.SignInDto = SignInDto;
 __decorate([
+    (0, class_validator_1.IsEmail)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)()
 ], SignInDto.prototype, "email", void 0);
 __decorate([
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.MinLength)(8)
+    (0, class_validator_1.IsNotEmpty)()
 ], SignInDto.prototype, "password", void 0);
