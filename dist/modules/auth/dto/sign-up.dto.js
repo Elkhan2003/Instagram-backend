@@ -30,9 +30,8 @@ __decorate([
 ], SignUpDto.prototype, "username", void 0);
 __decorate([
     (0, class_validator_1.Matches)(/^https?:\/\/[^\/]+/, {
-        message: 'Invalid token format'
+        message: 'photo must be a URL address'
     }),
-    (0, class_validator_1.IsUrl)(),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)()
 ], SignUpDto.prototype, "photo", void 0);

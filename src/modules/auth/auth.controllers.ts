@@ -8,9 +8,9 @@ import { mailer } from '../../plugins/mailer';
 
 const generateTokens = (payload: object) => {
 	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
-		expiresIn: '15m'
+		expiresIn: '2m'
 	});
-	const accessTokenExpiration = new Date().getTime() + 15 * 60 * 1000;
+	const accessTokenExpiration = new Date().getTime() + 2 * 60 * 1000;
 	const refreshToken = jwt.sign(payload, process.env.REFRESH_TOKEN_SECRET!, {
 		expiresIn: '15d'
 	});

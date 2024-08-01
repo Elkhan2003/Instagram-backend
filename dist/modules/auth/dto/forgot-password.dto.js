@@ -19,6 +19,9 @@ __decorate([
     (0, class_validator_1.IsNotEmpty)()
 ], ForgotPasswordDto.prototype, "email", void 0);
 __decorate([
+    (0, class_validator_1.Matches)(/^https?:\/\/[^\/]+/, {
+        message: 'frontEndUrl must be a URL address'
+    }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)()
 ], ForgotPasswordDto.prototype, "frontEndUrl", void 0);
