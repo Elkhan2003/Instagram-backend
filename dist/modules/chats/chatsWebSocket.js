@@ -4,6 +4,7 @@ exports.initializeWebSocket = void 0;
 const ws_1 = require("ws");
 const initializeWebSocket = (server) => {
     const wss = new ws_1.WebSocketServer({ server });
+    const messages = []; // Массив для хранения всех сообщений
     wss.on('connection', (ws) => {
         console.log('New client connected');
         ws.on('message', (message) => {
@@ -11,10 +12,10 @@ const initializeWebSocket = (server) => {
                 const parsedMessage = JSON.parse(message);
                 switch (parsedMessage.event) {
                     case 'message':
-                        broadcastMessage(parsedMessage);
+                        handleMessage(parsedMessage);
                         break;
                     case 'connection':
-                        broadcastMessage(parsedMessage);
+                        handleMessage(parsedMessage);
                         break;
                     default:
                         ws.send(JSON.stringify({ event: 'error', message: 'Unknown event type' }));
@@ -29,12 +30,16 @@ const initializeWebSocket = (server) => {
             console.log('Client disconnected');
         });
     });
+    const handleMessage = (message) => {
+        const { event, ...data } = message;
+        messages.push(data); // Добавляем сообщение в массив
+        broadcastMessage(message);
+    };
     const broadcastMessage = (message) => {
-        // Исправление типа message
+        // Возвращаем весь массив сообщений
         wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
-                // Проверка на состояние подключения клиента
-                client.send(JSON.stringify(message));
+                client.send(JSON.stringify(messages));
             }
         });
     };
