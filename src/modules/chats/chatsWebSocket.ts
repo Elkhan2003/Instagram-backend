@@ -1,9 +1,9 @@
-import { WebSocketServer } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws'; // Импортируем WebSocket и WebSocketServer
 import { Server } from 'http';
 
 const initializeWebSocket = (server: Server) => {
 	const wss = new WebSocketServer({ server });
-	const messages: Array<any> = []; // Массив для хранения всех сообщений
+	const messages: Array<any> = [];
 
 	wss.on('connection', (ws) => {
 		console.log('New client connected');
@@ -13,9 +13,6 @@ const initializeWebSocket = (server: Server) => {
 				const parsedMessage = JSON.parse(message);
 				switch (parsedMessage.event) {
 					case 'message':
-						handleMessage(parsedMessage);
-						break;
-					case 'connection':
 						handleMessage(parsedMessage);
 						break;
 					default:
@@ -38,12 +35,11 @@ const initializeWebSocket = (server: Server) => {
 
 	const handleMessage = (message: any) => {
 		const { event, ...data } = message;
-		messages.push(data); // Добавляем сообщение в массив
+		messages.push(data);
 		broadcastMessage(message);
 	};
 
 	const broadcastMessage = (message: any) => {
-		// Возвращаем весь массив сообщений
 		wss.clients.forEach((client) => {
 			if (client.readyState === WebSocket.OPEN) {
 				client.send(JSON.stringify(messages));
