@@ -7,7 +7,7 @@ const moment_1 = __importDefault(require("moment"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const prisma_1 = require("../../plugins/prisma");
-const redis_1 = require("../../plugins/redis");
+// import { redis } from '../../plugins/redis';
 const mailer_1 = require("../../plugins/mailer");
 const generateTokens = (payload) => {
     const accessToken = jsonwebtoken_1.default.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -181,7 +181,7 @@ const forgotPassword = async (req, res) => {
         const resetToken = jsonwebtoken_1.default.sign({ id: user.id }, process.env.RESET_PASSWORD_TOKEN_SECRET, {
             expiresIn: '15m'
         });
-        await redis_1.redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
+        // await redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
         const resetPasswordHtml = `
             <div style="font-family: Arial, sans-serif; color: #333;">
                 <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
@@ -244,12 +244,12 @@ const resetPassword = async (req, res) => {
         const decoded = jsonwebtoken_1.default.verify(token, process.env.RESET_PASSWORD_TOKEN_SECRET);
         const { id } = decoded;
         // Проверка существования токена в Redis
-        const storedToken = await redis_1.redis.getData(`resetToken:${id}`);
-        if (!storedToken || storedToken !== token) {
-            return res
-                .status(400)
-                .send({ message: 'Неверный или просроченный токен сброса пароля' });
-        }
+        // const storedToken = await redis.getData(`resetToken:${id}`);
+        // if (!storedToken || storedToken !== token) {
+        // 	return res
+        // 		.status(400)
+        // 		.send({ message: 'Неверный или просроченный токен сброса пароля' });
+        // }
         const hashedPassword = await bcryptjs_1.default.hash(newPassword, 10);
         await prisma_1.prisma.user.update({
             where: { id },
@@ -258,7 +258,7 @@ const resetPassword = async (req, res) => {
                 updatedAt: (0, moment_1.default)().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
             }
         });
-        await redis_1.redis.deleteData(`resetToken:${id}`);
+        // await redis.deleteData(`resetToken:${id}`);
         res.status(200).send({ message: 'Пароль успешно сброшен' });
     }
     catch (error) {

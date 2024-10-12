@@ -3,7 +3,7 @@ import moment from 'moment';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../plugins/prisma';
-import { redis } from '../../plugins/redis';
+// import { redis } from '../../plugins/redis';
 import { mailer } from '../../plugins/mailer';
 
 const generateTokens = (payload: object) => {
@@ -191,7 +191,7 @@ const forgotPassword = async (req: Request, res: Response) => {
 				expiresIn: '15m'
 			}
 		);
-		await redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
+		// await redis.setData(`resetToken:${user.id}`, resetToken, 3 * 60);
 		const resetPasswordHtml = `
             <div style="font-family: Arial, sans-serif; color: #333;">
                 <table align="center" width="600" cellpadding="0" cellspacing="0" style="border-collapse: collapse; border: 1px solid #ddd; margin: 0 auto;">
@@ -259,12 +259,12 @@ const resetPassword = async (req: Request, res: Response) => {
 		) as jwt.JwtPayload;
 		const { id } = decoded;
 		// Проверка существования токена в Redis
-		const storedToken = await redis.getData(`resetToken:${id}`);
-		if (!storedToken || storedToken !== token) {
-			return res
-				.status(400)
-				.send({ message: 'Неверный или просроченный токен сброса пароля' });
-		}
+		// const storedToken = await redis.getData(`resetToken:${id}`);
+		// if (!storedToken || storedToken !== token) {
+		// 	return res
+		// 		.status(400)
+		// 		.send({ message: 'Неверный или просроченный токен сброса пароля' });
+		// }
 		const hashedPassword = await bcrypt.hash(newPassword, 10);
 		await prisma.user.update({
 			where: { id },
@@ -273,7 +273,7 @@ const resetPassword = async (req: Request, res: Response) => {
 				updatedAt: moment().utcOffset(6).format('YYYY-MM-DD HH:mm:ss Z')
 			}
 		});
-		await redis.deleteData(`resetToken:${id}`);
+		// await redis.deleteData(`resetToken:${id}`);
 		res.status(200).send({ message: 'Пароль успешно сброшен' });
 	} catch (error) {
 		console.error('Error resetting password:', error);
