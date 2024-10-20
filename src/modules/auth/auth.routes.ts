@@ -4,6 +4,7 @@ import authControllers from './auth.controllers';
 import validateDto from '../../middleware/validateDto';
 import { SignInDto } from './dto/sign-in.dto';
 import { SignUpDto } from './dto/sign-up.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { RefreshTokenDto } from './dto/refresh-token.dto';
@@ -13,6 +14,12 @@ const router = Router();
 router.post('/sign-in', validateDto(SignInDto), authControllers.loginUser);
 router.post('/sign-up', validateDto(SignUpDto), authControllers.registerUser);
 router.post('/logout', authenticateToken, authControllers.logoutUser);
+router.patch(
+	'/update-profile',
+	authenticateToken,
+	validateDto(UpdateProfileDto),
+	authControllers.updateProfile
+);
 router.patch(
 	'/refresh',
 	validateDto(RefreshTokenDto),

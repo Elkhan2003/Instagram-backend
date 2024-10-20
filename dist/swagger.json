@@ -391,6 +391,54 @@
                 }
             }
         },
+        "/auth/update-profile": {
+            "patch": {
+                "summary": "Обновление данных профиля",
+                "description": "Обновление данных вашего профиля аккаунта",
+                "tags": ["Аутентификация"],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "username": {
+                                        "type": "string"
+                                    },
+                                    "photo": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Успешное обновлены данные пользователя",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Пользователь не аутентифицирован"
+                    },
+                    "500": {
+                        "description": "Внутренняя ошибка сервера"
+                    }
+                }
+            }
+        },
         "/upload/file": {
             "post": {
                 "summary": "Загрузка файла пользователя",

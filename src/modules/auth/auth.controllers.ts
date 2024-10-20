@@ -1,10 +1,16 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
+import { User as PrismaUser } from '@prisma/client';
 import moment from 'moment';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { prisma } from '../../plugins/prisma';
 import { redis } from '../../plugins/redis';
 import { mailer } from '../../plugins/mailer';
+
+interface IUserUpdate {
+	username: string;
+	photo: string;
+}
 
 const generateTokens = (payload: object) => {
 	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET!, {
@@ -124,6 +130,29 @@ const logoutUser = async (req: Request, res: Response) => {
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({ message: 'Internal server error' });
+	}
+};
+
+const updateProfile = async (req: Request, res: Response) => {
+	const { username, photo } = req.body;
+	const userId = req.user?.id;
+	try {
+		const updatedUserData: Partial<PrismaUser> = {};
+		if (username !== undefined) updatedUserData.username = username;
+		if (photo !== undefined) updatedUserData.photo = photo;
+
+		const data = await prisma.user.update({
+			where: {
+				id: userId
+			},
+			data: updatedUserData
+		});
+
+		res.status(200).send({ message: 'Ваш профиль обновлен успешно!' });
+	} catch (e) {
+		res
+			.status(500)
+			.send({ message: `Internal server error in updateProfile: ${e}` });
 	}
 };
 
@@ -312,6 +341,7 @@ export default {
 	loginUser,
 	registerUser,
 	logoutUser,
+	updateProfile,
 	refreshToken,
 	forgotPassword,
 	resetPassword,

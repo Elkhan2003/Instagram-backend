@@ -128,6 +128,29 @@ const logoutUser = async (req, res) => {
         res.status(500).send({ message: 'Internal server error' });
     }
 };
+const updateProfile = async (req, res) => {
+    const { username, photo } = req.body;
+    const userId = req.user?.id;
+    try {
+        const updatedUserData = {};
+        if (username !== undefined)
+            updatedUserData.username = username;
+        if (photo !== undefined)
+            updatedUserData.photo = photo;
+        const data = await prisma_1.prisma.user.update({
+            where: {
+                id: userId
+            },
+            data: updatedUserData
+        });
+        res.status(200).send({ message: 'Ваш профиль обновлен успешно!' });
+    }
+    catch (e) {
+        res
+            .status(500)
+            .send({ message: `Internal server error in updateProfile: ${e}` });
+    }
+};
 const refreshToken = async (req, res) => {
     const { refreshToken: tokenFromBody } = req.body;
     const { fingerprint } = req;
@@ -296,6 +319,7 @@ exports.default = {
     loginUser,
     registerUser,
     logoutUser,
+    updateProfile,
     refreshToken,
     forgotPassword,
     resetPassword,
