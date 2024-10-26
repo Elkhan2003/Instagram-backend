@@ -585,6 +585,39 @@
 											"updatedAt": {
 												"type": "string",
 												"format": "date-time"
+											},
+											"user": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "integer"
+													},
+													"username": {
+														"type": "string"
+													},
+													"role": {
+														"type": "string",
+														"enum": ["USER", "ADMIN"]
+													},
+													"email": {
+														"type": "string",
+														"format": "email"
+													},
+													"isActive": {
+														"type": "boolean"
+													},
+													"photo": {
+														"type": "string"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"updatedAt": {
+														"type": "string",
+														"format": "date-time"
+													}
+												}
 											}
 										}
 									}
@@ -674,31 +707,67 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"type": "object",
-									"properties": {
-										"id": {
-											"type": "integer"
-										},
-										"userId": {
-											"type": "integer"
-										},
-										"caption": {
-											"type": "string"
-										},
-										"mediaUrl": {
-											"type": "string"
-										},
-										"mediaType": {
-											"type": "string",
-											"enum": ["PHOTO", "VIDEO"]
-										},
-										"createdAt": {
-											"type": "string",
-											"format": "date-time"
-										},
-										"updatedAt": {
-											"type": "string",
-											"format": "date-time"
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer"
+											},
+											"userId": {
+												"type": "integer"
+											},
+											"caption": {
+												"type": "string"
+											},
+											"mediaUrl": {
+												"type": "string"
+											},
+											"mediaType": {
+												"type": "string",
+												"enum": ["PHOTO", "VIDEO"]
+											},
+											"createdAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"updatedAt": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"user": {
+												"type": "object",
+												"properties": {
+													"id": {
+														"type": "integer"
+													},
+													"username": {
+														"type": "string"
+													},
+													"role": {
+														"type": "string",
+														"enum": ["USER", "ADMIN"]
+													},
+													"email": {
+														"type": "string",
+														"format": "email"
+													},
+													"isActive": {
+														"type": "boolean"
+													},
+													"photo": {
+														"type": "string"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"updatedAt": {
+														"type": "string",
+														"format": "date-time"
+													}
+												}
+											}
 										}
 									}
 								}

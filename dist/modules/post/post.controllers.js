@@ -8,8 +8,12 @@ const prisma_1 = require("../../plugins/prisma");
 const getPosts = async (req, res) => {
     try {
         const data = await prisma_1.prisma.post.findMany({
-            orderBy: { updatedAt: 'desc' }
+            orderBy: { updatedAt: 'desc' },
+            include: {
+                user: true
+            }
         });
+        console.log(data);
         res.status(200).send(data);
     }
     catch (error) {
@@ -35,7 +39,10 @@ const getOtherPosts = async (req, res) => {
     try {
         const data = await prisma_1.prisma.post.findMany({
             where: { userId: Number(id) },
-            orderBy: { updatedAt: 'desc' }
+            orderBy: { updatedAt: 'desc' },
+            include: {
+                user: true
+            }
         });
         res.status(200).send(data);
     }

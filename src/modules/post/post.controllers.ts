@@ -5,7 +5,10 @@ import { prisma } from '../../plugins/prisma';
 const getPosts = async (req: Request, res: Response) => {
 	try {
 		const data = await prisma.post.findMany({
-			orderBy: { updatedAt: 'desc' }
+			orderBy: { updatedAt: 'desc' },
+			include: {
+				user: true
+			}
 		});
 		res.status(200).send(data);
 	} catch (error) {
@@ -32,7 +35,10 @@ const getOtherPosts = async (req: Request<{ id: string }>, res: Response) => {
 	try {
 		const data = await prisma.post.findMany({
 			where: { userId: Number(id) },
-			orderBy: { updatedAt: 'desc' }
+			orderBy: { updatedAt: 'desc' },
+			include: {
+				user: true
+			}
 		});
 		res.status(200).send(data);
 	} catch (error) {
