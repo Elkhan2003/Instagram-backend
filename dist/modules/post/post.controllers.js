@@ -10,10 +10,20 @@ const getPosts = async (req, res) => {
         const data = await prisma_1.prisma.post.findMany({
             orderBy: { updatedAt: 'desc' },
             include: {
-                user: true
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        role: true,
+                        email: true,
+                        isActive: true,
+                        photo: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                }
             }
         });
-        console.log(data);
         res.status(200).send(data);
     }
     catch (error) {
@@ -41,7 +51,18 @@ const getOtherPosts = async (req, res) => {
             where: { userId: Number(id) },
             orderBy: { updatedAt: 'desc' },
             include: {
-                user: true
+                user: {
+                    select: {
+                        id: true,
+                        username: true,
+                        role: true,
+                        email: true,
+                        isActive: true,
+                        photo: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                }
             }
         });
         res.status(200).send(data);

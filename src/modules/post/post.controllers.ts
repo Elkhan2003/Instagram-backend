@@ -7,7 +7,18 @@ const getPosts = async (req: Request, res: Response) => {
 		const data = await prisma.post.findMany({
 			orderBy: { updatedAt: 'desc' },
 			include: {
-				user: true
+				user: {
+					select: {
+						id: true,
+						username: true,
+						role: true,
+						email: true,
+						isActive: true,
+						photo: true,
+						createdAt: true,
+						updatedAt: true
+					}
+				}
 			}
 		});
 		res.status(200).send(data);
@@ -37,7 +48,18 @@ const getOtherPosts = async (req: Request<{ id: string }>, res: Response) => {
 			where: { userId: Number(id) },
 			orderBy: { updatedAt: 'desc' },
 			include: {
-				user: true
+				user: {
+					select: {
+						id: true,
+						username: true,
+						role: true,
+						email: true,
+						isActive: true,
+						photo: true,
+						createdAt: true,
+						updatedAt: true
+					}
+				}
 			}
 		});
 		res.status(200).send(data);
